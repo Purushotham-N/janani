@@ -56,6 +56,8 @@ export class CustomersComponent implements OnInit{
   isViewEditClicked(){
     if(this.myRadio != 0 ){
       this.toggleViewEdit = true;
+      this.customerIdUpdate = this.myRadio;
+      this.loadCustomerToEdit(this.customerIdUpdate);
      }
     else{
       alert("Please choose a record to Update");
@@ -126,7 +128,21 @@ export class CustomersComponent implements OnInit{
         this.toggleAdd = false;
         this.toggleViewEdit = false;
       });  
-    } 
   }
+  
+  loadCustomerToEdit(customerId: number) {  
+    this.customersService.getCustomerById(customerId).subscribe(customer=> {  
+      this.message = "";  
+      
+      this.customerIdUpdate = customer.customerId;  
+      this.customerForm.controls['firstName'].setValue(customer.firstName);  
+     this.customerForm.controls['lastName'].setValue(customer.lastName);  
+      this.customerForm.controls['mobileNo'].setValue(customer.mobileNo);  
+      this.customerForm.controls['whatsappNo'].setValue(customer.whatsappNo);  
+      this.customerForm.controls['address'].setValue(customer.address);  
+        
+    });  
+  }
+}
 
 
