@@ -1,16 +1,19 @@
 
 <h2>{{ title }}</h2>
+<h4 >{{ message }}</h4>
 
 <table>
-    <th colspan=5>Customers information</th>
+    <th colspan=6>Customers information</th>
     <tr>
+        <th>Select</th>
         <th>Customer Id</th>
         <th>Name</th>
         <th>Mobile No.</th>
         <th>Whatsapp No.</th>
         <th>Address</th>
     </tr>
-    <tr *ngFor="let customer of customersList">
+    <tr *ngFor="let customer of customersList ">
+        <td><input type="radio" name="select" [(ngModel)]="myRadio" value={{customer.customerId}}></td>
         <td>{{ customer.customerId }}</td>
         <td>{{ customer.firstName +" "+ customer.lastName }}</td>
         <td>{{ customer.mobileNo }}</td>
@@ -20,72 +23,46 @@
 </table>
 
     <button (click)="isAddClicked()">Add</button>
-    <div *ngIf="toggleAdd">
-    <!-- <mat-card>
-        <mat-card-header>
-            <mat-card-title>Customer Details Entry Form</mat-card-title>
-        </mat-card-header> -->
-        <!-- <mat-card-content>
-        
-        <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
-            <mat-form-field>
-                <input  matInput  placeholder="your first name" [(ngModel)]="firstName"  type="firstName" name="firstName"  required>
-            </mat-form-field>
-            <mat-form-field>
-                <input  matInput  placeholder="your last name" [(ngModel)]="lastName"  type="lastName" name="lastName"  required>
-            </mat-form-field>
-            <mat-form-field>
-                <input  matInput  placeholder="your mobile number" [(ngModel)]="mobileNo"  type="mobileNo" name="mobileNo"  required>
-            </mat-form-field>
-            <mat-form-field>
-                <input  matInput  placeholder="your whatsapp number" [(ngModel)]="whatsappNo"  type="whatsappNo" name="whatsappNo"  required>
-            </mat-form-field>
-            <mat-form-field>
-            <input  matInput  placeholder="your address" [(ngModel)]="address"  type="address"  name="address"  required>
-            </mat-form-field>
-
-        </form>
-        </mat-card-content>
-        <mat-card-actions>
-            <button  mat-raised-button (click)="saveCustomer(customer)"   color="primary">Login</button>
-        </mat-card-actions> -->
-
-        
-        
-        <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+    <button (click)="isViewEditClicked()">View</button>
+    <button (click)="isViewEditClicked()">Edit</button>
+    <button (click)="isDeleteClicked()">Delete</button>
+    <div *ngIf="toggleAdd || toggleViewEdit">
+        <form [formGroup]="customerForm" (ngSubmit)="saveOrUpdate(customerForm)">
             <div class="form-group">
-                <label for="firstName">First Name</label>
-                <input required ngModel formControlName="firstName" id="firstName"  type="text">
+                <label for="firstName">First Name:</label>
+                <input formControlName="firstName" id="firstName"  type="text" placeholder="your first name" value = "{{customerForm.firstName}}">
                 <!-- <div class="alert alert-danger" *ngIf="!customerForm.get('firstName').valid && customerForm.get('firstName').touched">First name is required</div> -->
+
+                <label for="lastName">Last Name:</label>
+                <input formControlName="lastName" id="lastName"  type="text" placeholder="your last name" value = "{{customerForm.lastName}}">
+                <!-- <div class="alert alert-danger" *ngIf="!customerForm.get('lastName').valid && customerForm.get('lastName').touched">Last name is required</div> -->
+
+                <label for="mobileNo">Mobile Number:</label>
+                <input formControlName="mobileNo" id="mobileNo"  type="text" placeholder="MobileNo"  value = "{{customerForm.mobileNo}}">
+                <!-- <div class="alert alert-danger" placeholder="mobileNo"  *ngIf="!customerForm.get('mobileNo').valid && customerForm.get('mobileNo').touched">Mobile number is required</div> -->
+
+                <label for="whatsappNo">Whatsapp Number:</label>
+                <input formControlName="whatsappNo" id="whatsappNo"  type="text" placeholder="WhatsappNo"  value = "{{customerForm.whatsappNo}}" >
+                <!-- <div class="alert alert-danger" *ngIf="!customerForm.get('whatsappNo').valid && customerForm.get('whatsappNo').touched">Whatsapp number is required</div> -->
+
+                <label for="address">Address:</label>
+                <input formControlName="address" id="address"  type="text" placeholder="Address" 
+                value = "{{customerForm.address}}">
+                <!-- <div class="alert alert-danger" *ngIf="!customerForm.get('address').valid && customerForm.get('address').touched">Address is required</div> -->
             </div>
             <div>
-                
-
-                
-                <button class="btn btn-primary">Submit</button>  
+               <button class="btn btn-primary">Submit</button>  
+               <button class="btn" (click)="onCancel()">Cancel</button>
+            </div>
+            <div>
+                {{customerForm.value | json}}
             </div>
             
-            
-                <!-- <input  placeholder="your first name" [(ngModel)]="firstName"  type="firstName" name="firstName"  required>
-            
-            
-                <input  placeholder="your last name" [(ngModel)]="lastName"  type="lastName" name="lastName"  required>
-            
-            
-                <input  placeholder="your mobile number" [(ngModel)]="mobileNo"  type="mobileNo" name="mobileNo"  required>
-            
-            
-                <input  placeholder="your whatsapp number" [(ngModel)]="whatsappNo"  type="whatsappNo" name="whatsappNo"  required>
-            
-            
-            <input  placeholder="your address" [(ngModel)]="address"  type="address"  name="address"  required> -->
         </form>
+    </div>
+    
+
         
-        
-           
-        
-    <!-- </mat-card> -->
-</div>
    
 
 

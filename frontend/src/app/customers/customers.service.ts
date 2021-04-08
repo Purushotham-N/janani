@@ -19,6 +19,12 @@ export class CustomersService {
     return custList;
   }
 
+  public getCustomerById(id:number): Observable<CustomerModel> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
+    let individualCustomer = this.http.get<CustomerModel>(this.URI+id, httpOptions );
+    return individualCustomer;
+  }
+
   public saveCustomer(customer: CustomerModel): Observable<CustomerModel> {
     return this.http.post<CustomerModel>(this.URI, customer,{
       headers : new HttpHeaders({
@@ -33,15 +39,16 @@ export class CustomersService {
   }  
 
   updateCustomer(customer: CustomerModel): Observable<CustomerModel> {  
-    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };  
-    return this.http.put<CustomerModel>(this.URI, customer, httpOptions);  
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
+    let id:number = customer.customerId;
+    console.log("service: updateConsumer:::"+this.URI+id);
+    console.log("URL printing:"+this.URI+customer.customerId);  
+    return this.http.put<CustomerModel>(this.URI+id, customer, httpOptions);  
   } 
 
-  onSubmit() {  
-    // this.dataSaved = false;  
-    // const employee = this.employeeForm.value;  
-    // this.CreateEmployee(employee);  
-    // this.employeeForm.reset();  
-  }  
+  public deleteCustomerById(id:number): Observable<CustomerModel> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
+    return this.http.delete<CustomerModel>(this.URI+id, httpOptions );;
+  }
   
 }
