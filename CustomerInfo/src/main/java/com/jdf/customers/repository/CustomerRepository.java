@@ -5,6 +5,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.jdf.customers.model.Customer;
 
-@RepositoryRestResource(collectionResourceRel = "customer", path = "customer")
+@RepositoryRestResource(collectionResourceRel = "customers", path = "customers")
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 }

@@ -1,4 +1,4 @@
-package com.jdf.customers.resource;
+package com.jdf.cattles.resource;
 
 import java.util.List;
 
@@ -16,26 +16,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jdf.customers.model.Customer;
-import com.jdf.customers.service.CustomerService;
+import com.jdf.cattles.model.CattleModel;
+import com.jdf.cattles.service.CattleService;
 
 @RestController
-@RequestMapping("/api/v1/customers")
-public class CustomerResource {
+@RequestMapping("/api/v1/cattles")
+public class CattlesResource {
 
 	@Autowired
-	private CustomerService service;
+	private CattleService service;
 
 	@GetMapping(path = "/")
 	@CrossOrigin(origins = "http://localhost:4200")
-	public ResponseEntity<List<Customer>> getAllCustomers() {
+	public ResponseEntity<List<CattleModel>> getAllcattles() {
 		try {
-			List<Customer> list;
-			list = service.getAllCustomers();
+			List<CattleModel> list;
+			list = service.getAllCattles();
 			if (list.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
-			return new ResponseEntity<List<Customer>>(list, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<List<CattleModel>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -44,10 +44,10 @@ public class CustomerResource {
 
 	@GetMapping(path = "/{id}")
 	@CrossOrigin(origins = "http://localhost:4200")
-	public ResponseEntity<Customer> getCustomerById(@PathVariable("id") long id) {
-		Customer customer = service.getCustomerById(id);
-		if (customer != null) {
-			return new ResponseEntity<>(customer, HttpStatus.OK);
+	public ResponseEntity<CattleModel> getCattleById(@PathVariable("id") long id) {
+		CattleModel cattle = service.getCattleById(id);
+		if (cattle != null) {
+			return new ResponseEntity<>(cattle, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -56,25 +56,25 @@ public class CustomerResource {
 //	 POST is typically used for resource creation while PUT is used for resource updates.
 	@PostMapping(path = "/")
 	@CrossOrigin(origins = "http://localhost:4200")
-	private ResponseEntity<Customer> saveCustomer(@RequestBody Customer customerData) {
+	private ResponseEntity<CattleModel> saveCattle(@RequestBody CattleModel cattleData) {
 		try {
-			Customer customer = service.saveOrUpdate(customerData);
-			return new ResponseEntity<>(customer, HttpStatus.CREATED);
+			CattleModel cattle = service.saveOrUpdate(cattleData);
+			return new ResponseEntity<>(cattle, HttpStatus.CREATED);
 		} catch (Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
 
-//	creating put mapping that updates the full customer detail
+//	creating put mapping that updates the full order detail
 	@RequestMapping(path = "/{id}", method = { RequestMethod.PATCH, RequestMethod.PUT })
 	@CrossOrigin(origins = "http://localhost:4200")
-
-	private ResponseEntity<Customer> updateCustomer(@PathVariable("id") long id, @RequestBody Customer patch) {
-		Customer customer = service.getCustomerById(id);
-		if (customer != null) {
-			customer = service.saveOrUpdate(service.applyPatchToCustomer(patch, customer));
-			return new ResponseEntity<>(customer, HttpStatus.OK);
+	private ResponseEntity<CattleModel> updateCattle(@PathVariable("id") long id, @RequestBody CattleModel patch) {
+		CattleModel cattle = service.getCattleById(id);
+		if (cattle != null) {
+			cattle = service.saveOrUpdate(service.applyPatchToCattle(patch, cattle));
+			return new ResponseEntity<>(cattle, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -82,12 +82,12 @@ public class CustomerResource {
 
 	@DeleteMapping(path = "/{id}")
 	@CrossOrigin(origins = "http://localhost:4200")
-	private ResponseEntity<HttpStatus> deleteCustomer(@PathVariable("id") long id) {
+	private ResponseEntity<HttpStatus> deleteCattle(@PathVariable("id") long id) {
 		try {
 
-			Customer customer = service.getCustomerById(id);
-			if (customer != null) {
-				service.deleteCustomerById(customer.getCustomerId());
+			CattleModel cattle = service.getCattleById(id);
+			if (cattle != null) {
+				service.deleteCattleById(cattle.getCattleId());
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -99,9 +99,9 @@ public class CustomerResource {
 
 	@DeleteMapping("/")
 	@CrossOrigin(origins = "http://localhost:4200")
-	public ResponseEntity<HttpStatus> deleteAllCustomers() {
+	public ResponseEntity<HttpStatus> deleteAllcattles() {
 		try {
-			service.deleteAllCustomers();
+			service.deleteAllCattles();
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

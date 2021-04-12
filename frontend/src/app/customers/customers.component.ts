@@ -1,4 +1,4 @@
-import { CustomerModel } from './../customer_model';
+import { CustomerModel } from './customer_model';
 import { Component, OnInit } from '@angular/core';
 import { CustomersService } from './customers.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -77,11 +77,11 @@ export class CustomersComponent implements OnInit{
 
   saveOrUpdate(customerForm:ReactiveFormsModule) {  
     this.customerModel = this.customerForm.value;
-    this.customerIdUpdate = this.myRadio; 
-    this.customerModel.customerId = this.customerIdUpdate;
     if (this.toggleAdd) { 
       this.saveCustomer(this.customerModel); 
     }else if(this.toggleViewEdit){
+      this.customerIdUpdate = this.myRadio; 
+      this.customerModel.customerId = this.customerIdUpdate;
       this.updateCustomer(this.customerModel);
     }
     this.customerForm.reset();  

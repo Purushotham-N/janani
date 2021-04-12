@@ -1,0 +1,5 @@
+package com.jdf.cattles.model;
+
+public enum CattleBreed {
+	JERSY, HOLSTEIN_FRIESIAN, GIR, SAHIWAL, RED_SINDHI, THARPARKAR, ONGOLE, COUNTRY, MURRAH, JAFRABADI, BANNI;
+}

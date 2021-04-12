@@ -1,5 +1,7 @@
 package com.jdf.orders.model;
 
+
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -22,14 +24,11 @@ public class OrderModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long orderId;
 
-	@Column(name = "order_date")
-	private Date orderDate;
+	@Column(name = "products")
+	private Products products;// enum
 
-	@Column(name = "milk_type")
-	private MilkType milkType;// enum
-
-	@Column(name = "shift")
-	private Shift shift;// enum
+	@Column(name = "shifts")
+	private Shifts shifts;// enum
 
 	@Column(name = "demand_quantity")
 	@NotNull
@@ -38,14 +37,19 @@ public class OrderModel {
 	@Column(name = "supply_quantity")
 	@NotNull
 	private float supplyQuantity;
+	
+	@Column(name = "order_date")
+	private Date orderDate;
 
-	@Column(name = "expected_dod") // dod - date of delivery
+//	 DOD - date of delivery
+	@Column(name = "expected_dod")
 	private Date expectedDOD;
 
-	@Column(name = "actual_dod") // dod - date of delivery
+	@Column(name = "actual_dod")
 	private Date actualDOD;
 
-	@Column(name = "customer_id") // customers table's pk, here fk
+//	 customers table's pk, here fk
+	@Column(name = "customer_id") 
 	@NotNull
 	private long customerId;
 
@@ -55,6 +59,22 @@ public class OrderModel {
 
 	public void setOrderId(long orderId) {
 		this.orderId = orderId;
+	}
+
+	public Products getProducts() {
+		return products;
+	}
+
+	public void setProducts(Products products) {
+		this.products = products;
+	}
+
+	public Shifts getShifts() {
+		return shifts;
+	}
+
+	public void setShifts(Shifts shifts) {
+		this.shifts = shifts;
 	}
 
 	public float getDemandQuantity() {
@@ -71,14 +91,6 @@ public class OrderModel {
 
 	public void setSupplyQuantity(float supplyQuantity) {
 		this.supplyQuantity = supplyQuantity;
-	}
-
-	public long getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(long customerId) {
-		this.customerId = customerId;
 	}
 
 	public Date getOrderDate() {
@@ -105,20 +117,12 @@ public class OrderModel {
 		this.actualDOD = actualDOD;
 	}
 
-	public MilkType getMilkType() {
-		return milkType;
+	public long getCustomerId() {
+		return customerId;
 	}
 
-	public void setMilkType(MilkType milkType) {
-		this.milkType = milkType;
-	}
-
-	public Shift getShift() {
-		return shift;
-	}
-
-	public void setShift(Shift shift) {
-		this.shift = shift;
+	public void setCustomerId(long customerId) {
+		this.customerId = customerId;
 	}
 
 }

@@ -52,11 +52,11 @@ public class OrderService {
 		if (patch.getExpectedDOD() != null) {
 			order.setExpectedDOD(patch.getExpectedDOD());
 		}
-		if (patch.getMilkType() != null) {
-			order.setMilkType(patch.getMilkType());
+		if (patch.getProducts() != null) {
+			order.setProducts(patch.getProducts());
 		}
-		if (patch.getShift() != null) {
-			order.setShift(patch.getShift());
+		if (patch.getShifts() != null) {
+			order.setShifts(patch.getShifts());
 		}
 		if (patch.getDemandQuantity() != 0.0) {
 			order.setDemandQuantity(patch.getDemandQuantity());
