@@ -22,7 +22,7 @@ export class CustomersComponent implements OnInit{
   toggleAdd : boolean = false;
   toggleViewEdit : boolean = false;
 
-  myRadio : number = 0;
+  choosen : number = 0;
   
   public customersList: CustomerModel[] = [];  
   customerForm: any;
@@ -54,9 +54,9 @@ export class CustomersComponent implements OnInit{
   }
 
   isViewEditClicked(){
-    if(this.myRadio != 0 ){
+    if(this.choosen != 0 ){
       this.toggleViewEdit = true;
-      this.customerIdUpdate = this.myRadio;
+      this.customerIdUpdate = this.choosen;
       this.loadCustomerToEdit(this.customerIdUpdate);
      }
     else{
@@ -65,8 +65,8 @@ export class CustomersComponent implements OnInit{
   }
 
   isDeleteClicked(){
-    if(this.myRadio != 0 ){
-      this.customerIdUpdate = this.myRadio;
+    if(this.choosen != 0 ){
+      this.customerIdUpdate = this.choosen;
       this.deleteCustomer(this.customerIdUpdate);
      }
     else{
@@ -80,7 +80,7 @@ export class CustomersComponent implements OnInit{
     if (this.toggleAdd) { 
       this.saveCustomer(this.customerModel); 
     }else if(this.toggleViewEdit){
-      this.customerIdUpdate = this.myRadio; 
+      this.customerIdUpdate = this.choosen; 
       this.customerModel.customerId = this.customerIdUpdate;
       this.updateCustomer(this.customerModel);
     }

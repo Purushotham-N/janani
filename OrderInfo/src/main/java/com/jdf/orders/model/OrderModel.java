@@ -2,7 +2,7 @@ package com.jdf.orders.model;
 
 
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,14 +39,14 @@ public class OrderModel {
 	private float supplyQuantity;
 	
 	@Column(name = "order_date")
-	private Date orderDate;
+	private LocalDateTime orderDate;
 
 //	 DOD - date of delivery
 	@Column(name = "expected_dod")
-	private Date expectedDOD;
+	private LocalDateTime expectedDOD;
 
 	@Column(name = "actual_dod")
-	private Date actualDOD;
+	private LocalDateTime actualDOD;
 
 //	 customers table's pk, here fk
 	@Column(name = "customer_id") 
@@ -93,27 +93,27 @@ public class OrderModel {
 		this.supplyQuantity = supplyQuantity;
 	}
 
-	public Date getOrderDate() {
+	public LocalDateTime getOrderDate() {
 		return orderDate;
 	}
 
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(LocalDateTime orderDate) {
 		this.orderDate = orderDate;
 	}
 
-	public Date getExpectedDOD() {
+	public LocalDateTime getExpectedDOD() {
 		return expectedDOD;
 	}
 
-	public void setExpectedDOD(Date expectedDOD) {
+	public void setExpectedDOD(LocalDateTime expectedDOD) {
 		this.expectedDOD = expectedDOD;
 	}
 
-	public Date getActualDOD() {
+	public LocalDateTime getActualDOD() {
 		return actualDOD;
 	}
 
-	public void setActualDOD(Date actualDOD) {
+	public void setActualDOD(LocalDateTime actualDOD) {
 		this.actualDOD = actualDOD;
 	}
 

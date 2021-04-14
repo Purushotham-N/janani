@@ -1,9 +1,8 @@
-
 <h2>{{ title }}</h2>
-<h4 >{{ message }}</h4>
+<h4>{{ message }}</h4>
 
 <table>
-    <th colspan=10>Orders information</th>
+    <th colspan=9>Orders information</th>
     <tr>
         <th>Select</th>
         <th>Order Id</th>
@@ -11,127 +10,136 @@
         <th>Shifts</th>
         <th>Demand Quantity</th>
         <th>Supply Quantity</th>
-        <th>OrderDate</th>
-        <th>Expected DOD</th>
+        <!-- <th>OrderDate</th>
+        <th>Expected DOD</th> -->
         <th>Actual DOD</th>
         <th>Customer Id</th>
+        <th>Actions</th>
     </tr>
     <tr *ngFor="let order of ordersList ">
-        <td><input type="radio" name="select" [(ngModel)]="myRadio" value={{order.orderId}}></td>
+        <td>
+            <input type="radio" [(ngModel)]="choosen" value={{order.orderId}}>
+        </td>
         <td>{{ order.orderId }}</td>
         <td>{{ order.products }}</td>
         <td>{{ order.shifts }}</td>
         <td>{{ order.demandQuantity }}</td>
         <td>{{ order.supplyQuantity }}</td>
-        <td>{{ order.orderDate }}</td>
-        <td>{{ order.expectedDOD }}</td>
+        <!-- <td>{{ order.orderDate }}</td>
+        <td>{{ order.expectedDOD }}</td> -->
         <td>{{ order.actualDOD }}</td>
         <td>{{ order.customerId }}</td>
-    </tr>   
+        <td>
+            <mat-dialog-actions>
+                <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">VIEW</button>
+                &nbsp;&nbsp;
+                <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">EDIT</button>
+                &nbsp;&nbsp;
+                <button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">DELETE</button>
+
+            </mat-dialog-actions>
+        </td>
+    </tr>
 </table>
+<mat-dialog-actions>
+    <button class="mat-raised-button mat-primary" (click)="isAddClicked()">ADD</button>
+</mat-dialog-actions>
 
-    <button (click)="isAddClicked()">Add</button>
-    <button (click)="isViewEditClicked()">View</button>
-    <button (click)="isViewEditClicked()">Edit</button>
-    <button (click)="isDeleteClicked()">Delete</button>
-    <div *ngIf="toggleAdd || toggleViewEdit">
 
-        <mat-card>
-            <mat-card-title>Order Details</mat-card-title>
-            <mat-card-content>
+<div *ngIf="toggleAdd || toggleViewEdit">
+
+    <mat-card>
+        <mat-card-title>Order Details</mat-card-title>
+        <mat-card-content>
 
             <mat-dialog-content [formGroup]="orderForm">
-        
-            <div class="form-group">
-                <mat-form-field>
-                <mat-label for="products">Products:</mat-label>
-                <mat-select formControlName="products" id="products">
-                <mat-option *ngFor="let product of products" [value]="product">
-                {{product}}
-                </mat-option>
-                </mat-select>
-                </mat-form-field>
 
-                <mat-form-field>
-                    <mat-label for="shifts">Shifts:</mat-label>
-                    <mat-select formControlName="shifts" id="shifts">
-                    <mat-option *ngFor="let shift of shifts | keyvalue" [value]="shift['value']">
-                    {{shift['value']}}
-                    </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label for="products">Products:</mat-label>
+                        <mat-select formControlName="products" id="products">
+                            <mat-option *ngFor="let product of products " [value]="product">
+                                {{product}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
 
-                <mat-form-field>
-                    <mat-label for="demandQuantity">Required Quantity:</mat-label>
-                    <input matInput formControlName="demandQuantity" id="demandQuantity" type="text" placeholder="Quantity" value = "{{orderForm.demandQuantity}}">
-                </mat-form-field>
-        
-                <mat-form-field>
-                    <mat-label for="supplyQuantity">Supplied Quantity:</mat-label>
-                    <input matInput formControlName="supplyQuantity" id="supplyQuantity" type="text" placeholder="Quantity" value = "{{orderForm.supplyQuantity}}">
-                </mat-form-field>
+                    <mat-form-field>
+                        <mat-label for="shifts">Shifts:</mat-label>
+                        <mat-select formControlName="shifts" id="shifts">
+                            <mat-option *ngFor="let shift of shifts " [value]="shift">
+                                {{shift}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
 
-                <mat-form-field>
-                    <mat-label for="orderDate">Order Date:</mat-label>
-                    <input matInput formControlName="orderDate" id="orderDate" type="text" placeholder="Pick a date" value = "{{orderForm.orderDate}}">
-                </mat-form-field>
-                
-                <mat-form-field>
-                    <mat-label for="orderDate">Order DOD:</mat-label>
-                    <input matInput formControlName="orderDate" [matDatepicker]="orderDate" placeholder="Pick a date" >
-                    <mat-datepicker-toggle matSuffix [for]="orderDate">
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #orderDate></mat-datepicker>
-                </mat-form-field>
+                    <mat-form-field>
+                        <mat-label for="demandQuantity">Demand Quantity:</mat-label>
+                        <input matInput formControlName="demandQuantity" id="demandQuantity" type="text"
+                            placeholder="Quantity" value="{{orderForm.demandQuantity}}">
+                    </mat-form-field>
 
-                <mat-form-field>
-                    <mat-label for="expectedDOD">Expected DOD:</mat-label>
-                    <input matInput formControlName="expectedDOD" [matDatepicker]="expectedDOD" placeholder="Pick a date" >
-                    <mat-datepicker-toggle matSuffix [for]="expectedDOD">
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #expectedDOD></mat-datepicker>
-                </mat-form-field>
+                    <mat-form-field>
+                        <mat-label for="supplyQuantity">Supply Quantity:</mat-label>
+                        <input matInput formControlName="supplyQuantity" id="supplyQuantity" type="text"
+                            placeholder="Quantity" value="{{orderForm.supplyQuantity}}">
+                    </mat-form-field>
 
-                <mat-form-field>
-                    <mat-label for="actualDOD">Actual DOD:</mat-label>
-                    <input matInput formControlName="actualDOD" [matDatepicker]="actualDOD" placeholder="Pick a date" >
-                    <mat-datepicker-toggle matSuffix [for]="actualDOD">
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #actualDOD></mat-datepicker>
-                </mat-form-field>
 
-                <mat-form-field>
-                    <mat-label for="customerId">Customer Id:</mat-label>
-                    <input matInput formControlName="customerId" id="customerId" type="text" placeholder="Pick a date" value = "{{orderForm.customerId}}">
-                </mat-form-field>
+                    <mat-form-field>
+                        <mat-label for="orderDate">Order Date:</mat-label>
+                        <input matInput formControlName="orderDate" [matDatepicker]="orderDate"
+                            placeholder="Pick a date">
+                        <mat-datepicker-toggle matSuffix [for]="orderDate">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #orderDate></mat-datepicker>
+                    </mat-form-field>
 
-            </div>
-            
-            <div>
-                {{orderForm.value | json}}
-            </div>
-            
+                    <mat-form-field>
+                        <mat-label for="expectedDOD">Expected Date:</mat-label>
+                        <input matInput formControlName="expectedDOD" [matDatepicker]="expectedDOD"
+                            placeholder="Pick a date">
+                        <mat-datepicker-toggle matSuffix [for]="expectedDOD">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #expectedDOD></mat-datepicker>
+                    </mat-form-field>
 
-    </mat-dialog-content>
+                    <mat-form-field>
+                        <mat-label for="actualDOD">Actual Date:</mat-label>
+                        <input matInput formControlName="actualDOD" [matDatepicker]="actualDOD"
+                            placeholder="Pick a date">
+                        <mat-datepicker-toggle matSuffix [for]="actualDOD">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #actualDOD></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="customerId">Customer Id:</mat-label>
+                        <input matInput formControlName="customerId" id="customerId" type="text"
+                            placeholder="Customer Id" value="{{orderForm.customerId}}">
+                    </mat-form-field>
+
+
+
+                </div>
+
+                <div>
+                    {{orderForm.value | json}}
+                </div>
+
+
+            </mat-dialog-content>
         </mat-card-content>
         <mat-dialog-actions>
 
-            <button class="mat-raised-button"
-                    (click)="onCancel()">
+            <button class="mat-raised-button" (click)="onCancel()">
                 Close
             </button>
-        
-            <button class="mat-raised-button mat-primary"
-                    (click)="saveOrUpdate(orderForm)">
+
+            <button class="mat-raised-button mat-primary" (click)="saveOrUpdate(orderForm)">
                 Save
             </button>
-        
+
         </mat-dialog-actions>
-        </mat-card>
-    </div>
-    
-
-        
-   
-
-
+    </mat-card>
+</div>

@@ -25,6 +25,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import { CattlesComponent } from './cattles/cattles.component';
+import {MatTableModule} from '@angular/material/table';
 
 
 @NgModule({
@@ -33,7 +35,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     CustomersComponent,
     LoginComponent,
     MessageComponent,
-    OrdersComponent
+    OrdersComponent,
+    CattlesComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     NgbModule,
     BrowserAnimationsModule,
     MatInputModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatDialogModule, MatSelectModule, MatDatepickerModule, MatMomentDateModule, MatIconModule, MatListModule,
-    MatSidenavModule, MatToolbarModule
+    MatSidenavModule, MatToolbarModule, MatTableModule
   ], 
   providers: [CustomersService],
   bootstrap: [AppComponent]

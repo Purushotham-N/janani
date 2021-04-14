@@ -1,0 +1,128 @@
+<h2>{{ title }}</h2>
+<h4>{{ message }}</h4>
+
+<table>
+    <th colspan=10>Cattles information</th>
+    <tr>
+        <th>Select</th>
+        <th>Cattle Id</th>
+        <th>Type</th>
+        <th>Breed</th>
+        <th>Age</th>
+        <th>Milk Capacity</th>
+        <th>Lactation</th>
+        <th>Delivery Date</th>
+        <th>Calf Gendar</th>
+        <th>Actions</th>
+    </tr>
+    <tr *ngFor="let cattle of cattlesList ">
+        <td>            
+            <input type="radio"  [(ngModel)]="choosen" value={{cattle.cattleId}}>
+        </td>
+        <td>{{ cattle.cattleId }}</td>
+        <td>{{ cattle.cattleType }}</td>
+        <td>{{ cattle.cattleBreed }}</td>
+        <td>{{ cattle.age }}</td>
+        <td>{{ cattle.milkCapacity }}</td>
+        <td>{{ cattle.lactation }}</td>
+        <td>{{ cattle.deliveryDate }}</td>
+        <td>{{ cattle.calfGendar }}</td>
+        <td>
+        <mat-dialog-actions>
+            <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">VIEW</button>
+    &nbsp;&nbsp;
+            <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">EDIT</button>
+    &nbsp;&nbsp;        
+            <button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">DELETE</button>
+        
+        </mat-dialog-actions>
+    </td>
+    </tr>
+</table>
+<mat-dialog-actions>
+<button class="mat-raised-button mat-primary" (click)="isAddClicked()">ADD</button>
+</mat-dialog-actions>
+
+
+<div *ngIf="toggleAdd || toggleViewEdit">
+
+    <mat-card>
+        <mat-card-title>Cattle Details</mat-card-title>
+        <mat-card-content>
+
+            <mat-dialog-content [formGroup]="cattleForm">
+
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label for="cattleType">Cattle Type:</mat-label>
+                        <mat-select formControlName="cattleType" id="cattleType">
+                            <mat-option *ngFor="let cattle of cattleType " [value]="cattle">
+                                {{cattle}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="cattleBreed">Cattle Breed:</mat-label>
+                        <mat-select formControlName="cattleBreed" id="cattleBreed">
+                            <mat-option *ngFor="let breed of cattleBreed " [value]="breed">
+                                {{breed}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="age">Cattle Age:</mat-label>
+                        <input matInput formControlName="age" id="age" type="text" placeholder="Age"
+                            value="{{cattleForm.age}}">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="milkCapacity">Milk Capacity:</mat-label>
+                        <input matInput formControlName="milkCapacity" id="milkCapacity" type="text"
+                            placeholder="Milk Capacity" value="{{cattleForm.milkCapacity}}">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="lactation">Lactation:</mat-label>
+                        <input matInput formControlName="lactation" id="lactation" type="text" placeholder="lactation"
+                            value="{{cattleForm.lactation}}">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="deliveryDate">Delivery Date:</mat-label>
+                        <input matInput formControlName="deliveryDate" [matDatepicker]="deliveryDate"
+                            placeholder="Pick a date">
+                        <mat-datepicker-toggle matSuffix [for]="deliveryDate">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #deliveryDate></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="calfGendar">Calf Gendar:</mat-label>
+                        <input matInput formControlName="calfGendar" id="calfGendar" type="text"
+                            placeholder="male/female" value="{{cattleForm.calfGendar}}">
+                    </mat-form-field>
+
+                </div>
+
+                <div>
+                    {{cattleForm.value | json}}
+                </div>
+
+
+            </mat-dialog-content>
+        </mat-card-content>
+        <mat-dialog-actions>
+
+            <button class="mat-raised-button" (click)="onCancel()">
+                Close
+            </button>
+
+            <button class="mat-raised-button mat-primary" (click)="saveOrUpdate(cattleForm)">
+                Save
+            </button>
+
+        </mat-dialog-actions>
+    </mat-card>
+</div>

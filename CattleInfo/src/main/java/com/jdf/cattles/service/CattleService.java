@@ -52,6 +52,9 @@ public class CattleService {
 		if (patch.getCattleType() != null) {
 			cattle.setCattleType(patch.getCattleType());
 		}
+		if (patch.getCattleBreed() != null) {
+			cattle.setCattleBreed(patch.getCattleBreed());
+		}
 		if (patch.getDeliveryDate() != null) {
 			cattle.setDeliveryDate(patch.getDeliveryDate());
 		}

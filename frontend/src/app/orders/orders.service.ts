@@ -11,7 +11,7 @@ import { Observable, throwError } from 'rxjs';
 export class OrdersService {
   
   constructor(private http: HttpClient) { }
-  private URI: string = "http://127.0.0.1:8080/api/v1/orders/";
+  private URI: string = "http://127.0.0.1:8083/api/v1/orders/";
 
 
   public getOrdersList(): Observable<OrderModel[]> {

@@ -11,7 +11,7 @@ import { CustomerModel } from './customer_model';
 export class CustomersService {
   
   constructor(private http: HttpClient) { }
-  private URI: string = "http://127.0.0.1:8080/api/v1/customers/";
+  private URI: string = "http://127.0.0.1:8082/api/v1/customers/";
 
 
   public getCustomersList(): Observable<CustomerModel[]> {

@@ -2,7 +2,8 @@ package com.jdf.cattles.model;
 
 
 
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +30,7 @@ public class CattleModel {
 	private CattleType cattleType;// enum
 
 	@Column(name = "cattle_breed")
-	private CattleBreed breed;// enum
+	private CattleBreed cattleBreed;// enum
 
 	@Column(name = "age")
 	@NotNull
@@ -44,7 +45,7 @@ public class CattleModel {
 
 
 	@Column(name = "recent_delivery_date")
-	private Date deliveryDate;
+	private LocalDateTime deliveryDate;
 
 	@Column(name = "calf_gendar")
 	private String calfGendar;
@@ -65,12 +66,14 @@ public class CattleModel {
 		this.cattleType = cattleType;
 	}
 
-	public CattleBreed getBreed() {
-		return breed;
+	
+
+	public CattleBreed getCattleBreed() {
+		return cattleBreed;
 	}
 
-	public void setBreed(CattleBreed breed) {
-		this.breed = breed;
+	public void setCattleBreed(CattleBreed cattleBreed) {
+		this.cattleBreed = cattleBreed;
 	}
 
 	public float getAge() {
@@ -97,11 +100,11 @@ public class CattleModel {
 		this.lactation = lactation;
 	}
 
-	public Date getDeliveryDate() {
+	public LocalDateTime getDeliveryDate() {
 		return deliveryDate;
 	}
 
-	public void setDeliveryDate(Date deliveryDate) {
+	public void setDeliveryDate(LocalDateTime deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
 

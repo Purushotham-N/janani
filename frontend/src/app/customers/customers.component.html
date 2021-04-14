@@ -1,65 +1,105 @@
 
 <h2>{{ title }}</h2>
-<h4 >{{ message }}</h4>
+<h4>{{ message }}</h4>
 
 <table>
-    <th colspan=6>Customers information</th>
+    <th colspan=7>Customers information</th>
     <tr>
         <th>Select</th>
         <th>Customer Id</th>
         <th>Name</th>
-        <th>Mobile No.</th>
-        <th>Whatsapp No.</th>
+        <th>Mobile No</th>
+        <th>Whatsapp No</th>
         <th>Address</th>
+        <th>Actions</th>
     </tr>
     <tr *ngFor="let customer of customersList ">
-        <td><input type="radio" name="select" [(ngModel)]="myRadio" value={{customer.customerId}}></td>
+        <td>            
+            <input type="radio"  [(ngModel)]="choosen" value={{customer.customerId}}>
+        </td>
         <td>{{ customer.customerId }}</td>
-        <td>{{ customer.firstName +" "+ customer.lastName }}</td>
+        <td>{{ customer.firstName +" "+ customer.lastName  }}</td>
         <td>{{ customer.mobileNo }}</td>
         <td>{{ customer.whatsappNo }}</td>
         <td>{{ customer.address }}</td>
-    </tr>   
+        <td>
+        <mat-dialog-actions>
+            <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">VIEW</button>
+    &nbsp;&nbsp;
+            <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">EDIT</button>
+    &nbsp;&nbsp;        
+            <button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">DELETE</button>
+        
+        </mat-dialog-actions>
+    </td>
+    </tr>
 </table>
+<mat-dialog-actions>
+<button class="mat-raised-button mat-primary" (click)="isAddClicked()">ADD</button>
+</mat-dialog-actions>
 
-    <button (click)="isAddClicked()">Add</button>
-    <button (click)="isViewEditClicked()">View</button>
-    <button (click)="isViewEditClicked()">Edit</button>
-    <button (click)="isDeleteClicked()">Delete</button>
-    <div *ngIf="toggleAdd || toggleViewEdit">
-        <form [formGroup]="customerForm" (ngSubmit)="saveOrUpdate(customerForm)">
-            <div class="form-group">
-                <label for="firstName">First Name:</label>
-                <input formControlName="firstName" id="firstName"  type="text" placeholder="your first name" value = "{{customerForm.firstName}}">
-                <!-- <div class="alert alert-danger" *ngIf="!customerForm.get('firstName').valid && customerForm.get('firstName').touched">First name is required</div> -->
 
-                <label for="lastName">Last Name:</label>
-                <input formControlName="lastName" id="lastName"  type="text" placeholder="your last name" value = "{{customerForm.lastName}}">
-                <!-- <div class="alert alert-danger" *ngIf="!customerForm.get('lastName').valid && customerForm.get('lastName').touched">Last name is required</div> -->
+<div *ngIf="toggleAdd || toggleViewEdit">
 
-                <label for="mobileNo">Mobile Number:</label>
-                <input formControlName="mobileNo" id="mobileNo"  type="text" placeholder="MobileNo"  value = "{{customerForm.mobileNo}}">
-                <!-- <div class="alert alert-danger" placeholder="mobileNo"  *ngIf="!customerForm.get('mobileNo').valid && customerForm.get('mobileNo').touched">Mobile number is required</div> -->
+    <mat-card>
+        <mat-card-title>Customer Details</mat-card-title>
+        <mat-card-content>
 
-                <label for="whatsappNo">Whatsapp Number:</label>
-                <input formControlName="whatsappNo" id="whatsappNo"  type="text" placeholder="WhatsappNo"  value = "{{customerForm.whatsappNo}}" >
-                <!-- <div class="alert alert-danger" *ngIf="!customerForm.get('whatsappNo').valid && customerForm.get('whatsappNo').touched">Whatsapp number is required</div> -->
+            <mat-dialog-content [formGroup]="customerForm">
 
-                <label for="address">Address:</label>
-                <input formControlName="address" id="address"  type="text" placeholder="Address" 
-                value = "{{customerForm.address}}">
-                <!-- <div class="alert alert-danger" *ngIf="!customerForm.get('address').valid && customerForm.get('address').touched">Address is required</div> -->
-            </div>
-            <div>
-               <button class="btn btn-primary">Submit</button>  
-               <button class="btn" (click)="onCancel()">Cancel</button>
-            </div>
-            <div>
-                {{customerForm.value | json}}
-            </div>
-            
-        </form>
-    </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label for="firstName">First Name:</mat-label>
+                            <input matInput formControlName="firstName" id="firstName" type="text" placeholder="First Name"
+                                value="{{customerForm.firstName}}">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="lastName">Last Name:</mat-label>
+                            <input matInput formControlName="lastName" id="lastName" type="text" placeholder="Last Name"
+                                value="{{customerForm.lastName}}">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="mobileNo">Mobile No:</mat-label>
+                            <input matInput formControlName="mobileNo" id="mobileNo" type="text" placeholder="Mobile No"
+                                value="{{customerForm.mobileNo}}">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="whatsappNo">Whatsapp No:</mat-label>
+                            <input matInput formControlName="whatsappNo" id="whatsappNo" type="text" placeholder="Whatsapp No"
+                                value="{{customerForm.whatsappNo}}">
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label for="address">Address:</mat-label>
+                            <input matInput formControlName="address" id="address" type="text" placeholder="Address"
+                                value="{{customerForm.address}}">
+                    </mat-form-field>
+
+                </div>
+
+                <div>
+                    {{customerForm.value | json}}
+                </div>
+
+
+            </mat-dialog-content>
+        </mat-card-content>
+        <mat-dialog-actions>
+
+            <button class="mat-raised-button" (click)="onCancel()">
+                Close
+            </button>
+
+            <button class="mat-raised-button mat-primary" (click)="saveOrUpdate(customerForm)">
+                Save
+            </button>
+
+        </mat-dialog-actions>
+    </mat-card>
+</div>
     
 
         
