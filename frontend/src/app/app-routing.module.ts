@@ -4,6 +4,7 @@ import { CattlesComponent } from './cattles/cattles.component';
 import { CustomersComponent } from './customers/customers.component';
 import { LoginComponent } from './login/login.component';
 import { OrdersComponent } from './orders/orders.component';
+import { TablesComponent } from './tables/tables.component'
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
     path: 'orders',
     component: OrdersComponent,
   },
+  {
+    path: 'tables',
+    component: TablesComponent,
+  },  
   {
     path: '**',
     redirectTo: '/'

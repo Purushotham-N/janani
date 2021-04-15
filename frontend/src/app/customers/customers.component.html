@@ -1,39 +1,74 @@
 
 <h2>{{ title }}</h2>
 <h4>{{ message }}</h4>
+<div>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
 
-<table>
-    <th colspan=7>Customers information</th>
-    <tr>
-        <th>Select</th>
-        <th>Customer Id</th>
-        <th>Name</th>
-        <th>Mobile No</th>
-        <th>Whatsapp No</th>
-        <th>Address</th>
-        <th>Actions</th>
-    </tr>
-    <tr *ngFor="let customer of customersList ">
-        <td>            
-            <input type="radio"  [(ngModel)]="choosen" value={{customer.customerId}}>
-        </td>
-        <td>{{ customer.customerId }}</td>
-        <td>{{ customer.firstName +" "+ customer.lastName  }}</td>
-        <td>{{ customer.mobileNo }}</td>
-        <td>{{ customer.whatsappNo }}</td>
-        <td>{{ customer.address }}</td>
-        <td>
-        <mat-dialog-actions>
-            <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">VIEW</button>
-    &nbsp;&nbsp;
-            <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">EDIT</button>
-    &nbsp;&nbsp;        
-            <button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">DELETE</button>
-        
-        </mat-dialog-actions>
+    <!-- select Column -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell  *matHeaderCellDef > Select </th>
+      <td mat-cell *matCellDef="let element" >
+        <input type="radio"  [(ngModel)]="choosen" value={{element.customerId}}>
+      </td>
+    </ng-container>
+
+    <!-- customerId Column -->
+    <ng-container matColumnDef="customerId">
+        <th mat-header-cell *matHeaderCellDef > Customer ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.customerId}} </td>
+    </ng-container>
+
+    <!-- firstName Column -->
+    <ng-container matColumnDef="firstName">
+        <th mat-header-cell *matHeaderCellDef > First Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+    </ng-container>
+
+    <!-- lastName Column -->
+    <ng-container matColumnDef="lastName">
+        <th mat-header-cell *matHeaderCellDef > Last Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+    </ng-container>
+
+    <!-- mobileNo Column -->
+    <ng-container matColumnDef="mobileNo">
+        <th mat-header-cell *matHeaderCellDef > Mobile No </th>
+        <td mat-cell *matCellDef="let element"> {{element.mobileNo}} </td>
+    </ng-container>
+
+    <!-- whatsappNo Column -->
+    <ng-container matColumnDef="whatsappNo">
+        <th mat-header-cell *matHeaderCellDef > Whatsapp No </th>
+        <td mat-cell *matCellDef="let element"> {{element.whatsappNo}} </td>
+    </ng-container>
+
+    <!-- address Column -->
+    <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef > Address </th>
+        <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+    </ng-container>
+
+    <!-- actions Column -->
+    <ng-container matColumnDef="Actions">
+    <th mat-header-cell  *matHeaderCellDef > Actions </th>
+    <td mat-cell *matCellDef="let row" >
+          <!-- <button mat-button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">View</button>&nbsp;&nbsp; -->
+          <button mat-button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">Edit</button>&nbsp;&nbsp;
+          <button mat-button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">Delete</button>&nbsp;&nbsp;
     </td>
-    </tr>
-</table>
+  </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+
 <mat-dialog-actions>
 <button class="mat-raised-button mat-primary" (click)="isAddClicked()">ADD</button>
 </mat-dialog-actions>
@@ -100,9 +135,9 @@
         </mat-dialog-actions>
     </mat-card>
 </div>
-    
 
-        
-   
+
+
+
 
 

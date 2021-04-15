@@ -5,49 +5,72 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
+import {AfterViewInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 
+/**
+ * @title Table with pagination
+ */
 @Component({
   selector: 'customers',
   templateUrl:'./customers.component.html',
   styleUrls: ['./customers.component.css']
 })
-export class CustomersComponent implements OnInit{ 
-  customerModel: CustomerModel = new CustomerModel;  
-  allCustomers?: Observable<CustomerModel[]> ;  
-  customerIdUpdate: number = 0;  
-  message = "";  
+export class CustomersComponent implements AfterViewInit{
+  customerModel: CustomerModel = new CustomerModel;
+  allCustomers?: Observable<CustomerModel[]> ;
+  customerIdUpdate: number = 0;
+  message = "";
 
   title = "List of Customers";
   toggleAdd : boolean = false;
   toggleViewEdit : boolean = false;
 
   choosen : number = 0;
-  
-  public customersList: CustomerModel[] = [];  
+
+  public customersList: CustomerModel[] = [];
   customerForm: any;
 
+  displayedColumns: string[] = ['select', 'customerId', 'firstName', 'lastName', 'mobileNo', 'whatsappNo', 'address', 'Actions'];
+  dataSource = new MatTableDataSource<CustomerModel>(this.customersList);
 
-  constructor(private formbulider: FormBuilder, private customersService: CustomersService,
-    private modalService: NgbModal, private reactiveForms:ReactiveFormsModule) {
-    this.customersService.getCustomersList().subscribe(data => this.customersList = data);
-    
-   }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-   ngOnInit() {  
-    this.customerForm = this.formbulider.group({  
+  ngAfterViewInit() {
+    this.customerForm = this.formbulider.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       mobileNo: ['', [Validators.required]],
       whatsappNo: ['', [Validators.required]],
       address: ['', [Validators.required]],
-    });  
-    this.loadAllCustomers(); 
-  }  
+    });
+    this.loadAllCustomers();
 
-  loadAllCustomers() {  
-    this.allCustomers = this.customersService.getCustomersList();  
-  }  
+    this.customersService.getCustomersList().subscribe((dataResponse: any) => {
+      this.dataSource = dataResponse;
+      setTimeout(() => this.dataSource.paginator = this.paginator);
+      console.log(this.paginator);
+      });
+  }
+
+  constructor(private formbulider: FormBuilder, private customersService: CustomersService,
+    private modalService: NgbModal, private reactiveForms:ReactiveFormsModule) {
+    this.customersService.getCustomersList().subscribe(data =>
+      {
+        this.customersList = data;
+      });
+
+   }
+
+   ngOnInit() {
+
+  }
+
+  loadAllCustomers() {
+    this.allCustomers = this.customersService.getCustomersList();
+  }
 
   isAddClicked(){
     this.toggleAdd = true;
@@ -75,73 +98,73 @@ export class CustomersComponent implements OnInit{
   }
 
 
-  saveOrUpdate(customerForm:ReactiveFormsModule) {  
+  saveOrUpdate(customerForm:ReactiveFormsModule) {
     this.customerModel = this.customerForm.value;
-    if (this.toggleAdd) { 
-      this.saveCustomer(this.customerModel); 
+    if (this.toggleAdd) {
+      this.saveCustomer(this.customerModel);
     }else if(this.toggleViewEdit){
-      this.customerIdUpdate = this.choosen; 
+      this.customerIdUpdate = this.choosen;
       this.customerModel.customerId = this.customerIdUpdate;
       this.updateCustomer(this.customerModel);
     }
-    this.customerForm.reset();  
-    this.loadAllCustomers();  
-  } 
-
-  deleteCustomer(customerId: number) {
-    if (confirm("Are you sure you want to delete this ?")) {  
-      this.customersService.deleteCustomerById(customerId).subscribe(() => {   
-        this.message = 'Record Deleted Succefully';  
-        this.loadAllCustomers();  
-        this.customerIdUpdate = 0;  
-        this.customerForm.reset();  
-      });  
-    } 
+    this.customerForm.reset();
+    this.loadAllCustomers();
   }
 
-  onCancel() {      
+  deleteCustomer(customerId: number) {
+    if (confirm("Are you sure you want to delete this ?")) {
+      this.customersService.deleteCustomerById(customerId).subscribe(() => {
+        this.message = 'Record Deleted Succefully';
+        this.loadAllCustomers();
+        this.customerIdUpdate = 0;
+        this.customerForm.reset();
+      });
+    }
+  }
+
+  onCancel() {
     this.toggleAdd = false;
     this.toggleViewEdit = false;
-    this.customerForm.reset();  
-  } 
+    this.customerForm.reset();
+  }
 
   saveCustomer(customerModel: CustomerModel){
-      this.customersService.createCustomer(customerModel).subscribe(  
-        () => {   
-          this.message = 'Record Saved Successfully';  
-          this.loadAllCustomers();  
-          this.customerIdUpdate = 0;  
-          this.customerForm.reset();  
+      this.customersService.createCustomer(customerModel).subscribe(
+        () => {
+          this.message = 'Record Saved Successfully';
+          this.loadAllCustomers();
+          this.customerIdUpdate = 0;
+          this.customerForm.reset();
           this.toggleAdd = false;
           this.toggleViewEdit = false;
-        }  
-      );  
+        }
+      );
   }
 
   updateCustomer(customerModel: CustomerModel){
-      customerModel.customerId =  this.customerIdUpdate;   
-      this.customersService.updateCustomer(customerModel).subscribe(() => {  
-        this.message = 'Record Updated Successfully';  
-        this.loadAllCustomers();  
-        this.customerIdUpdate = 0;  
-        this.customerForm.reset(); 
+      customerModel.customerId =  this.customerIdUpdate;
+      this.customersService.updateCustomer(customerModel).subscribe(() => {
+        this.message = 'Record Updated Successfully';
+        this.loadAllCustomers();
+        this.customerIdUpdate = 0;
+        this.customerForm.reset();
         this.toggleAdd = false;
         this.toggleViewEdit = false;
-      });  
+      });
   }
-  
-  loadCustomerToEdit(customerId: number) {  
-    this.customersService.getCustomerById(customerId).subscribe(customer=> {  
-      this.message = "";  
-      
-      this.customerIdUpdate = customer.customerId;  
-      this.customerForm.controls['firstName'].setValue(customer.firstName);  
-     this.customerForm.controls['lastName'].setValue(customer.lastName);  
-      this.customerForm.controls['mobileNo'].setValue(customer.mobileNo);  
-      this.customerForm.controls['whatsappNo'].setValue(customer.whatsappNo);  
-      this.customerForm.controls['address'].setValue(customer.address);  
-        
-    });  
+
+  loadCustomerToEdit(customerId: number) {
+    this.customersService.getCustomerById(customerId).subscribe(customer=> {
+      this.message = "";
+
+      this.customerIdUpdate = customer.customerId;
+      this.customerForm.controls['firstName'].setValue(customer.firstName);
+      this.customerForm.controls['lastName'].setValue(customer.lastName);
+      this.customerForm.controls['mobileNo'].setValue(customer.mobileNo);
+      this.customerForm.controls['whatsappNo'].setValue(customer.whatsappNo);
+      this.customerForm.controls['address'].setValue(customer.address);
+
+    });
   }
 }
 

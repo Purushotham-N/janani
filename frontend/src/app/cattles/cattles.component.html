@@ -1,44 +1,84 @@
 <h2>{{ title }}</h2>
 <h4>{{ message }}</h4>
 
-<table>
-    <th colspan=10>Cattles information</th>
-    <tr>
-        <th>Select</th>
-        <th>Cattle Id</th>
-        <th>Type</th>
-        <th>Breed</th>
-        <th>Age</th>
-        <th>Milk Capacity</th>
-        <th>Lactation</th>
-        <th>Delivery Date</th>
-        <th>Calf Gendar</th>
-        <th>Actions</th>
-    </tr>
-    <tr *ngFor="let cattle of cattlesList ">
-        <td>            
-            <input type="radio"  [(ngModel)]="choosen" value={{cattle.cattleId}}>
+<div>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- select Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell  *matHeaderCellDef > Select </th>
+        <td mat-cell *matCellDef="let element" >
+          <input type="radio"  [(ngModel)]="choosen" value={{element.cattleId}}>
         </td>
-        <td>{{ cattle.cattleId }}</td>
-        <td>{{ cattle.cattleType }}</td>
-        <td>{{ cattle.cattleBreed }}</td>
-        <td>{{ cattle.age }}</td>
-        <td>{{ cattle.milkCapacity }}</td>
-        <td>{{ cattle.lactation }}</td>
-        <td>{{ cattle.deliveryDate }}</td>
-        <td>{{ cattle.calfGendar }}</td>
-        <td>
-        <mat-dialog-actions>
-            <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">VIEW</button>
-    &nbsp;&nbsp;
-            <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">EDIT</button>
-    &nbsp;&nbsp;        
-            <button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">DELETE</button>
-        
-        </mat-dialog-actions>
-    </td>
-    </tr>
-</table>
+      </ng-container>
+
+      <!-- cattleId Column -->
+      <ng-container matColumnDef="cattleId">
+          <th mat-header-cell *matHeaderCellDef > Cattle ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.cattleId}} </td>
+      </ng-container>
+
+      <!-- cattleType Column -->
+      <ng-container matColumnDef="cattleType">
+          <th mat-header-cell *matHeaderCellDef > Type </th>
+          <td mat-cell *matCellDef="let element"> {{element.cattleType}} </td>
+      </ng-container>
+
+      <!-- cattleBreed Column -->
+      <ng-container matColumnDef="cattleBreed">
+          <th mat-header-cell *matHeaderCellDef > Breed </th>
+          <td mat-cell *matCellDef="let element"> {{element.cattleBreed}} </td>
+      </ng-container>
+
+      <!-- age Column -->
+      <ng-container matColumnDef="age">
+          <th mat-header-cell *matHeaderCellDef > Age </th>
+          <td mat-cell *matCellDef="let element"> {{element.age}} </td>
+      </ng-container>
+
+      <!-- milkCapacity Column -->
+      <ng-container matColumnDef="milkCapacity">
+          <th mat-header-cell *matHeaderCellDef > Milk Capacity </th>
+          <td mat-cell *matCellDef="let element"> {{element.milkCapacity}} </td>
+      </ng-container>
+
+      <!-- lactation Column -->
+      <ng-container matColumnDef="lactation">
+          <th mat-header-cell *matHeaderCellDef > Lactation </th>
+          <td mat-cell *matCellDef="let element"> {{element.lactation}} </td>
+      </ng-container>
+
+      <!-- deliveryDate Column -->
+      <ng-container matColumnDef="deliveryDate">
+        <th mat-header-cell *matHeaderCellDef > Delivery Date</th>
+        <td mat-cell *matCellDef="let element"> {{element.deliveryDate}} </td>
+      </ng-container>
+
+      <!-- deliveryDate Column -->
+      <ng-container matColumnDef="calfGendar">
+        <th mat-header-cell *matHeaderCellDef > Calf Gendar</th>
+        <td mat-cell *matCellDef="let element"> {{element.calfGendar}} </td>
+      </ng-container>
+
+      <!-- actions Column -->
+      <ng-container matColumnDef="Actions">
+      <th mat-header-cell  *matHeaderCellDef > Actions </th>
+      <td mat-cell *matCellDef="let row" >
+            <!-- <button mat-button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">View</button>&nbsp;&nbsp; -->
+            <button mat-button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">Edit</button>&nbsp;&nbsp;
+            <button mat-button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">Delete</button>&nbsp;&nbsp;
+      </td>
+    </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
 <mat-dialog-actions>
 <button class="mat-raised-button mat-primary" (click)="isAddClicked()">ADD</button>
 </mat-dialog-actions>

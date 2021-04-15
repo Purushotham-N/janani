@@ -1,49 +1,84 @@
 <h2>{{ title }}</h2>
 <h4>{{ message }}</h4>
 
-<table>
-    <th colspan=9>Orders information</th>
-    <tr>
-        <th>Select</th>
-        <th>Order Id</th>
-        <th>Products</th>
-        <th>Shifts</th>
-        <th>Demand Quantity</th>
-        <th>Supply Quantity</th>
-        <!-- <th>OrderDate</th>
-        <th>Expected DOD</th> -->
-        <th>Actual DOD</th>
-        <th>Customer Id</th>
-        <th>Actions</th>
-    </tr>
-    <tr *ngFor="let order of ordersList ">
-        <td>
-            <input type="radio" [(ngModel)]="choosen" value={{order.orderId}}>
-        </td>
-        <td>{{ order.orderId }}</td>
-        <td>{{ order.products }}</td>
-        <td>{{ order.shifts }}</td>
-        <td>{{ order.demandQuantity }}</td>
-        <td>{{ order.supplyQuantity }}</td>
-        <!-- <td>{{ order.orderDate }}</td>
-        <td>{{ order.expectedDOD }}</td> -->
-        <td>{{ order.actualDOD }}</td>
-        <td>{{ order.customerId }}</td>
-        <td>
-            <mat-dialog-actions>
-                <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">VIEW</button>
-                &nbsp;&nbsp;
-                <button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">EDIT</button>
-                &nbsp;&nbsp;
-                <button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">DELETE</button>
+<div>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
 
-            </mat-dialog-actions>
+      <!-- select Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell  *matHeaderCellDef > Select </th>
+        <td mat-cell *matCellDef="let element" >
+          <input type="radio"  [(ngModel)]="choosen" value={{element.orderId}}>
         </td>
-    </tr>
-</table>
-<mat-dialog-actions>
-    <button class="mat-raised-button mat-primary" (click)="isAddClicked()">ADD</button>
-</mat-dialog-actions>
+      </ng-container>
+
+      <!-- customerId Column -->
+      <ng-container matColumnDef="orderId">
+          <th mat-header-cell *matHeaderCellDef > Order ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.orderId}} </td>
+      </ng-container>
+
+      <!-- products Column -->
+      <ng-container matColumnDef="products">
+          <th mat-header-cell *matHeaderCellDef > Products </th>
+          <td mat-cell *matCellDef="let element"> {{element.products}} </td>
+      </ng-container>
+
+      <!-- shifts Column -->
+      <ng-container matColumnDef="shifts">
+          <th mat-header-cell *matHeaderCellDef > Shifts </th>
+          <td mat-cell *matCellDef="let element"> {{element.shifts}} </td>
+      </ng-container>
+
+      <!-- demandQuantity Column -->
+      <ng-container matColumnDef="demandQuantity">
+          <th mat-header-cell *matHeaderCellDef > Demand Quantity </th>
+          <td mat-cell *matCellDef="let element"> {{element.demandQuantity}} </td>
+      </ng-container>
+
+      <!-- supplyQuantity Column -->
+      <ng-container matColumnDef="supplyQuantity">
+          <th mat-header-cell *matHeaderCellDef > Supply Quantity </th>
+          <td mat-cell *matCellDef="let element"> {{element.supplyQuantity}} </td>
+      </ng-container>
+
+      <!-- actualDOD Column -->
+      <ng-container matColumnDef="actualDOD">
+          <th mat-header-cell *matHeaderCellDef > Delivery Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.actualDOD}} </td>
+      </ng-container>
+
+      <!-- customerId Column -->
+      <ng-container matColumnDef="customerId">
+        <th mat-header-cell *matHeaderCellDef > Customer Id</th>
+        <td mat-cell *matCellDef="let element"> {{element.customerId}} </td>
+    </ng-container>
+
+      <!-- actions Column -->
+      <ng-container matColumnDef="Actions">
+      <th mat-header-cell  *matHeaderCellDef > Actions </th>
+      <td mat-cell *matCellDef="let row" >
+            <!-- <button mat-button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">View</button>&nbsp;&nbsp; -->
+            <button mat-button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">Edit</button>&nbsp;&nbsp;
+            <button mat-button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">Delete</button>&nbsp;&nbsp;
+      </td>
+    </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+
+
+  <mat-dialog-actions>
+  <button class="mat-raised-button mat-primary" (click)="isAddClicked()">ADD</button>
+  </mat-dialog-actions>
+
 
 
 <div *ngIf="toggleAdd || toggleViewEdit">

@@ -7,8 +7,14 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OrderModel } from './order_model';
 
+import {AfterViewInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 
+/**
+ * @title Table with pagination
+ */
 @Component({
   selector: 'orders',
   templateUrl: './orders.component.html',
@@ -37,14 +43,19 @@ export class OrdersComponent implements OnInit {
     return isNaN(Number(item));
   });
 
+  displayedColumns: string[] = ['select', 'orderId', 'products', 'shifts', 'demandQuantity', 'supplyQuantity', 'actualDOD', 'customerId', 'Actions'];
+  dataSource = new MatTableDataSource<OrderModel>(this.ordersList);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
 
   constructor(private formbulider: FormBuilder, private ordersService: OrdersService,
     private modalService: NgbModal, private reactiveForms: ReactiveFormsModule) {
     this.ordersService.getOrdersList().subscribe(data => this.ordersList = data);
 
   }
-
-  ngOnInit() {
+  
+  ngAfterViewInit() {
     this.orderForm = this.formbulider.group({
       products: ['', [Validators.required]],
       shifts: ['', [Validators.required]],
@@ -56,6 +67,18 @@ export class OrdersComponent implements OnInit {
       customerId: ['', [Validators.required]],
     });
     this.loadAllOrders();
+
+    this.ordersService.getOrdersList().subscribe((dataResponse: any) => {
+      this.dataSource = dataResponse;
+      setTimeout(() => this.dataSource.paginator = this.paginator);
+      console.log(this.paginator);
+      });
+
+  }
+
+
+  ngOnInit() {
+
   }
 
   loadAllOrders() {
@@ -161,5 +184,6 @@ export class OrdersComponent implements OnInit {
   }
 
 }
+
 
 

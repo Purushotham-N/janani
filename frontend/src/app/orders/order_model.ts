@@ -8,4 +8,9 @@ export class OrderModel{
     expectedDOD:Date | undefined;
     actualDOD:Date | undefined;
     customerId:number = 0;
+    
+
+    getFiedNames(){
+        return ["Order Id", "Products", "Shifts", "Demand Quantity", "Supply Quantity", "Order Date", "Expected Delivery", "Actual Delivery", "Customer Id"]
+    }
 }

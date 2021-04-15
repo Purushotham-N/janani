@@ -1,3 +1,5 @@
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -26,7 +28,9 @@ import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { CattlesComponent } from './cattles/cattles.component';
-import {MatTableModule} from '@angular/material/table';
+import { TablesComponent } from './tables/tables.component';
+
+
 
 
 @NgModule({
@@ -36,7 +40,8 @@ import {MatTableModule} from '@angular/material/table';
     LoginComponent,
     MessageComponent,
     OrdersComponent,
-    CattlesComponent
+    CattlesComponent,
+    TablesComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +52,7 @@ import {MatTableModule} from '@angular/material/table';
     NgbModule,
     BrowserAnimationsModule,
     MatInputModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatDialogModule, MatSelectModule, MatDatepickerModule, MatMomentDateModule, MatIconModule, MatListModule,
-    MatSidenavModule, MatToolbarModule, MatTableModule
+    MatSidenavModule, MatToolbarModule, MatTableModule, MatPaginatorModule
   ], 
   providers: [CustomersService],
   bootstrap: [AppComponent]
