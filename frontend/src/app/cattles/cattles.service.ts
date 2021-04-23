@@ -9,13 +9,14 @@ import { CattleModel } from './cattle_model';
   providedIn: 'root'
 })
 export class CattlesService {
-  
+
   constructor(private http: HttpClient) { }
   private URI: string = "http://127.0.0.1:8084/api/v1/cattles/";
 
 
   public getCattlesList(): Observable<CattleModel[]> {
-    let cattlesList = this.http.get<CattleModel[]>(this.URI);
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
+    let cattlesList = this.http.get<CattleModel[]>(this.URI, httpOptions);
     return cattlesList;
   }
 
@@ -33,22 +34,22 @@ export class CattlesService {
     })
   }
 
-  createCattle(cattle: CattleModel): Observable<CattleModel> {  
-    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };  
-    return this.http.post<CattleModel>(this.URI, cattle, httpOptions);  
-  }  
+  createCattle(cattle: CattleModel): Observable<CattleModel> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
+    return this.http.post<CattleModel>(this.URI, cattle, httpOptions);
+  }
 
-  updateCattle(cattle: CattleModel): Observable<CattleModel> {  
+  updateCattle(cattle: CattleModel): Observable<CattleModel> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
     let id:number = cattle.cattleId;
     console.log("service: updateCattle:::"+this.URI+id);
-    console.log("URL printing:"+this.URI+cattle.cattleId);  
-    return this.http.put<CattleModel>(this.URI+id, cattle, httpOptions);  
-  } 
+    console.log("URL printing:"+this.URI+cattle.cattleId);
+    return this.http.put<CattleModel>(this.URI+id, cattle, httpOptions);
+  }
 
   public deleteCattleById(id:number): Observable<CattleModel> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
     return this.http.delete<CattleModel>(this.URI+id, httpOptions );;
   }
-  
+
 }

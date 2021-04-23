@@ -1,0 +1,3 @@
+export enum FodderVariety {
+  HAY, STRAW, LEGUMINOUS, NONLEGUMINOUS, SILAGE, ROUGHAGE
+}

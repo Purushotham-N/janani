@@ -1,3 +1,4 @@
+import { MatSort } from '@angular/material/sort';
 import { CustomerModel } from './customer_model';
 import { Component, OnInit } from '@angular/core';
 import { CustomersService } from './customers.service';
@@ -34,9 +35,10 @@ export class CustomersComponent implements AfterViewInit{
   customerForm: any;
 
   displayedColumns: string[] = ['select', 'customerId', 'firstName', 'lastName', 'mobileNo', 'whatsappNo', 'address', 'Actions'];
-  dataSource = new MatTableDataSource<CustomerModel>(this.customersList);
+  dataSource : MatTableDataSource<CustomerModel>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngAfterViewInit() {
     this.customerForm = this.formbulider.group({
@@ -46,22 +48,16 @@ export class CustomersComponent implements AfterViewInit{
       whatsappNo: ['', [Validators.required]],
       address: ['', [Validators.required]],
     });
-    this.loadAllCustomers();
-
-    this.customersService.getCustomersList().subscribe((dataResponse: any) => {
-      this.dataSource = dataResponse;
-      setTimeout(() => this.dataSource.paginator = this.paginator);
-      console.log(this.paginator);
-      });
   }
 
   constructor(private formbulider: FormBuilder, private customersService: CustomersService,
     private modalService: NgbModal, private reactiveForms:ReactiveFormsModule) {
-    this.customersService.getCustomersList().subscribe(data =>
-      {
-        this.customersList = data;
-      });
-
+    this.customersService.getCustomersList().subscribe(data =>{
+      this.customersList = data;
+      this.dataSource = new MatTableDataSource<CustomerModel>(this.customersList);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    });
    }
 
    ngOnInit() {

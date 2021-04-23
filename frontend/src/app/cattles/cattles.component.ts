@@ -1,3 +1,4 @@
+import { MatSortModule } from '@angular/material/sort';
 import { CattleBreed } from './CattleBreed.enum';
 import { CattleType } from './CattleType.enum';
 import { CattleModel } from './cattle_model';
@@ -7,9 +8,10 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CattlesService } from './cattles.service';
 
-import {AfterViewInit, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import { AfterViewInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort} from '@angular/material/sort'
 
 
 /**
@@ -17,43 +19,49 @@ import {MatTableDataSource} from '@angular/material/table';
  */
 @Component({
   selector: 'cattles',
-  templateUrl:'./cattles.component.html',
+  templateUrl: './cattles.component.html',
   styleUrls: ['./cattles.component.css']
 })
-export class CattlesComponent implements OnInit{
+export class CattlesComponent implements OnInit {
   cattleModel: CattleModel = new CattleModel;
-  allCattles?: Observable<CattleModel[]> ;
+  allCattles?: Observable<CattleModel[]>;
   cattleIdUpdate: number = 0;
   message = "";
 
   title = "List of Cattles";
-  toggleAdd : boolean = false;
-  toggleViewEdit : boolean = false;
+  toggleAdd: boolean = false;
+  toggleViewEdit: boolean = false;
 
-  choosen : number = 0;
+  choosen: number = 0;
 
   public cattlesList: CattleModel[] = [];
   cattleForm: any;
 
   cattleType = Object.keys(CattleType).filter((item) => {
     return isNaN(Number(item));
-});
+  });
 
   cattleBreed = Object.keys(CattleBreed).filter((item) => {
     return isNaN(Number(item));
-});
+  });
 
-displayedColumns: string[] = ['select', 'cattleId', 'cattleType', 'cattleBreed', 'age', 'milkCapacity', 'lactation', 'deliveryDate', 'calfGendar', 'Actions'];
-  dataSource = new MatTableDataSource<CattleModel>(this.cattlesList);
+  displayedColumns: string[] = ['select', 'cattleId', 'cattleType', 'cattleBreed', 'age', 'milkCapacity', 'lactation', 'deliveryDate', 'calfGendar', 'Actions'];
+  dataSource : MatTableDataSource<CattleModel>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private formbulider: FormBuilder, private cattlesService: CattlesService,
-    private modalService: NgbModal, private reactiveForms:ReactiveFormsModule) {
-    this.cattlesService.getCattlesList().subscribe(data => this.cattlesList = data);
-   }
+    private modalService: NgbModal, private reactiveForms: ReactiveFormsModule) {
+    this.cattlesService.getCattlesList().subscribe(data => {
+      this.cattlesList = data;
+      this.dataSource = new MatTableDataSource<CattleModel>(this.cattlesList);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    });
+  }
 
-   ngAfterViewInit() {
+  ngAfterViewInit() {
     this.cattleForm = this.formbulider.group({
       cattleId: ['', [Validators.required]],
       cattleType: ['', [Validators.required]],
@@ -64,54 +72,46 @@ displayedColumns: string[] = ['select', 'cattleId', 'cattleType', 'cattleBreed',
       deliveryDate: ['', [Validators.required]],
       calfGendar: ['', [Validators.required]],
     });
-    this.loadAllCattles();
+  }
 
-    this.cattlesService.getCattlesList().subscribe((dataResponse: any) => {
-      this.dataSource = dataResponse;
-      setTimeout(() => this.dataSource.paginator = this.paginator);
-      console.log(this.paginator);
-      });
-   }
-
-   ngOnInit() {
-
+  ngOnInit() {
   }
 
   loadAllCattles() {
     this.allCattles = this.cattlesService.getCattlesList();
   }
 
-  isAddClicked(){
+  isAddClicked() {
     this.toggleAdd = true;
   }
 
-  isViewEditClicked(){
-    if(this.choosen != 0 ){
+  isViewEditClicked() {
+    if (this.choosen != 0) {
       this.toggleViewEdit = true;
       this.cattleIdUpdate = this.choosen;
       this.loadCattleToEdit(this.cattleIdUpdate);
-     }
-    else{
+    }
+    else {
       alert("Please choose a record to Update");
     }
   }
 
-  isDeleteClicked(){
-    if(this.choosen != 0 ){
+  isDeleteClicked() {
+    if (this.choosen != 0) {
       this.cattleIdUpdate = this.choosen;
       this.deleteCattle(this.cattleIdUpdate);
-     }
-    else{
+    }
+    else {
       alert("Please choose a record to Delete");
     }
   }
 
 
-  saveOrUpdate(cattleForm:ReactiveFormsModule) {
+  saveOrUpdate(cattleForm: ReactiveFormsModule) {
     this.cattleModel = this.cattleForm.value;
     if (this.toggleAdd) {
       this.saveCattle(this.cattleModel);
-    }else if(this.toggleViewEdit){
+    } else if (this.toggleViewEdit) {
       this.cattleIdUpdate = this.choosen;
       this.cattleModel.cattleId = this.cattleIdUpdate;
       this.updateCattle(this.cattleModel);
@@ -137,38 +137,38 @@ displayedColumns: string[] = ['select', 'cattleId', 'cattleType', 'cattleBreed',
     this.cattleForm.reset();
   }
 
-  saveCattle(cattleModel: CattleModel){
-      this.cattlesService.createCattle(cattleModel).subscribe(
-        () => {
-          this.message = 'Record Saved Successfully';
-          this.loadAllCattles();
-          this.cattleIdUpdate = 0;
-          this.cattleForm.reset();
-          this.toggleAdd = false;
-          this.toggleViewEdit = false;
-        }
-      );
-  }
-
-  updateCattle(cattleModel: CattleModel){
-      cattleModel.cattleId =  this.cattleIdUpdate;
-      this.cattlesService.updateCattle(cattleModel).subscribe(() => {
-        this.message = 'Record Updated Successfully';
+  saveCattle(cattleModel: CattleModel) {
+    this.cattlesService.createCattle(cattleModel).subscribe(
+      () => {
+        this.message = 'Record Saved Successfully';
         this.loadAllCattles();
         this.cattleIdUpdate = 0;
         this.cattleForm.reset();
         this.toggleAdd = false;
         this.toggleViewEdit = false;
-      });
+      }
+    );
+  }
+
+  updateCattle(cattleModel: CattleModel) {
+    cattleModel.cattleId = this.cattleIdUpdate;
+    this.cattlesService.updateCattle(cattleModel).subscribe(() => {
+      this.message = 'Record Updated Successfully';
+      this.loadAllCattles();
+      this.cattleIdUpdate = 0;
+      this.cattleForm.reset();
+      this.toggleAdd = false;
+      this.toggleViewEdit = false;
+    });
   }
 
   loadCattleToEdit(cattleId: number) {
-    this.cattlesService.getCattleById(cattleId).subscribe(cattle=> {
+    this.cattlesService.getCattleById(cattleId).subscribe(cattle => {
       this.message = "";
 
       this.cattleIdUpdate = cattle.cattleId;
       this.cattleForm.controls['cattleType'].setValue(cattle.cattleType);
-     this.cattleForm.controls['cattleBreed'].setValue(cattle.cattleBreed);
+      this.cattleForm.controls['cattleBreed'].setValue(cattle.cattleBreed);
       this.cattleForm.controls['age'].setValue(cattle.age);
       this.cattleForm.controls['milkCapacity'].setValue(cattle.milkCapacity);
       this.cattleForm.controls['lactation'].setValue(cattle.lactation);

@@ -1,3 +1,4 @@
+import { MatSort } from '@angular/material/sort';
 import { Shifts } from './Shifts.enum';
 import { Products } from './Products.enum';
 import { Component, OnInit } from '@angular/core';
@@ -44,17 +45,23 @@ export class OrdersComponent implements OnInit {
   });
 
   displayedColumns: string[] = ['select', 'orderId', 'products', 'shifts', 'demandQuantity', 'supplyQuantity', 'actualDOD', 'customerId', 'Actions'];
-  dataSource = new MatTableDataSource<OrderModel>(this.ordersList);
+  dataSource : MatTableDataSource<OrderModel>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
 
   constructor(private formbulider: FormBuilder, private ordersService: OrdersService,
     private modalService: NgbModal, private reactiveForms: ReactiveFormsModule) {
-    this.ordersService.getOrdersList().subscribe(data => this.ordersList = data);
+    this.ordersService.getOrdersList().subscribe(data => {
+      this.ordersList = data
+      this.dataSource = new MatTableDataSource<OrderModel>(this.ordersList);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    });
 
   }
-  
+
   ngAfterViewInit() {
     this.orderForm = this.formbulider.group({
       products: ['', [Validators.required]],
@@ -66,14 +73,6 @@ export class OrdersComponent implements OnInit {
       actualDOD: ['', [Validators.required]],
       customerId: ['', [Validators.required]],
     });
-    this.loadAllOrders();
-
-    this.ordersService.getOrdersList().subscribe((dataResponse: any) => {
-      this.dataSource = dataResponse;
-      setTimeout(() => this.dataSource.paginator = this.paginator);
-      console.log(this.paginator);
-      });
-
   }
 
 

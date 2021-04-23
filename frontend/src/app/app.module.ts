@@ -28,8 +28,9 @@ import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { CattlesComponent } from './cattles/cattles.component';
-import { TablesComponent } from './tables/tables.component';
-
+import { IonicModule } from '@ionic/angular';
+import { FodderInventoryComponent } from './fodder-inventory/fodder-inventory.component';
+import { MatSortModule } from '@angular/material/sort';
 
 
 
@@ -41,7 +42,7 @@ import { TablesComponent } from './tables/tables.component';
     MessageComponent,
     OrdersComponent,
     CattlesComponent,
-    TablesComponent
+    FodderInventoryComponent
   ],
   imports: [
     BrowserModule,
@@ -52,8 +53,9 @@ import { TablesComponent } from './tables/tables.component';
     NgbModule,
     BrowserAnimationsModule,
     MatInputModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatDialogModule, MatSelectModule, MatDatepickerModule, MatMomentDateModule, MatIconModule, MatListModule,
-    MatSidenavModule, MatToolbarModule, MatTableModule, MatPaginatorModule
-  ], 
+    MatSidenavModule, MatToolbarModule, MatTableModule, MatPaginatorModule, MatSortModule,
+    IonicModule.forRoot()
+  ],
   providers: [CustomersService],
   bootstrap: [AppComponent]
 })
