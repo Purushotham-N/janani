@@ -31,7 +31,8 @@ import { CattlesComponent } from './cattles/cattles.component';
 import { IonicModule } from '@ionic/angular';
 import { FodderInventoryComponent } from './fodder-inventory/fodder-inventory.component';
 import { MatSortModule } from '@angular/material/sort';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -54,6 +55,8 @@ import { MatSortModule } from '@angular/material/sort';
     BrowserAnimationsModule,
     MatInputModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatDialogModule, MatSelectModule, MatDatepickerModule, MatMomentDateModule, MatIconModule, MatListModule,
     MatSidenavModule, MatToolbarModule, MatTableModule, MatPaginatorModule, MatSortModule,
+    MatTooltipModule,
+    FlexLayoutModule,
     IonicModule.forRoot()
   ],
   providers: [CustomersService],

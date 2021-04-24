@@ -11,6 +11,8 @@ import { OrderModel } from './order_model';
 import {AfterViewInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import { ChangeDetectorRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 
 /**
@@ -31,7 +33,6 @@ export class OrdersComponent implements OnInit {
   toggleAdd: boolean = false;
   toggleViewEdit: boolean = false;
 
-  choosen: number = 0;
 
   public ordersList: OrderModel[] = [];
   orderForm: any;
@@ -44,7 +45,7 @@ export class OrdersComponent implements OnInit {
     return isNaN(Number(item));
   });
 
-  displayedColumns: string[] = ['select', 'orderId', 'products', 'shifts', 'demandQuantity', 'supplyQuantity', 'actualDOD', 'customerId', 'Actions'];
+  displayedColumns: string[] = ['orderId', 'products', 'shifts', 'demandQuantity', 'supplyQuantity', 'actualDOD', 'customerId', 'Actions'];
   dataSource : MatTableDataSource<OrderModel>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -52,7 +53,8 @@ export class OrdersComponent implements OnInit {
 
 
   constructor(private formbulider: FormBuilder, private ordersService: OrdersService,
-    private modalService: NgbModal, private reactiveForms: ReactiveFormsModule) {
+    private modalService: NgbModal, private reactiveForms: ReactiveFormsModule,
+    private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog,) {
     this.ordersService.getOrdersList().subscribe(data => {
       this.ordersList = data
       this.dataSource = new MatTableDataSource<OrderModel>(this.ordersList);
@@ -80,6 +82,18 @@ export class OrdersComponent implements OnInit {
 
   }
 
+  refresh() {
+    this.ordersService.getOrdersList().subscribe(data => {
+      this.ordersList = data;
+      this.dataSource = new MatTableDataSource<OrderModel>(this.ordersList);
+
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+
+      this.changeDetectorRefs.detectChanges();
+    });
+  }
+
   loadAllOrders() {
     this.allOrders = this.ordersService.getOrdersList();
   }
@@ -88,25 +102,15 @@ export class OrdersComponent implements OnInit {
     this.toggleAdd = true;
   }
 
-  isViewEditClicked() {
-    if (this.choosen != 0) {
+  isViewEditClicked(row) {
       this.toggleViewEdit = true;
-      this.orderIdUpdate = this.choosen;
+      this.orderIdUpdate = row.orderId;
       this.loadCustomerToEdit(this.orderIdUpdate);
-    }
-    else {
-      alert("Please choose a record to Update");
-    }
   }
 
-  isDeleteClicked() {
-    if (this.choosen != 0) {
-      this.orderIdUpdate = this.choosen;
+  isDeleteClicked(row) {
+      this.orderIdUpdate = row.orderId;
       this.deleteCustomer(this.orderIdUpdate);
-    }
-    else {
-      alert("Please choose a record to Delete");
-    }
   }
 
 
@@ -115,19 +119,18 @@ export class OrdersComponent implements OnInit {
     if (this.toggleAdd) {
       this.saveOrder(this.orderModel);
     } else if (this.toggleViewEdit) {
-      this.orderIdUpdate = this.choosen;
       this.orderModel.orderId = this.orderIdUpdate;
       this.updateOrder(this.orderModel);
     }
     this.orderForm.reset();
-    this.loadAllOrders();
+    this.refresh();
   }
 
   deleteCustomer(orderId: number) {
     if (confirm("Are you sure you want to delete this ?")) {
       this.ordersService.deleteOrderById(orderId).subscribe(() => {
         this.message = 'Record Deleted Succefully';
-        this.loadAllOrders();
+        this.refresh();
         this.orderIdUpdate = 0;
         this.orderForm.reset();
       });
@@ -144,7 +147,7 @@ export class OrdersComponent implements OnInit {
     this.ordersService.createOrder(orderModel).subscribe(
       () => {
         this.message = 'Record Saved Successfully';
-        this.loadAllOrders();
+        this.refresh();
         this.orderIdUpdate = 0;
         this.orderForm.reset();
         this.toggleAdd = false;
@@ -157,7 +160,7 @@ export class OrdersComponent implements OnInit {
     orderModel.orderId = this.orderIdUpdate;
     this.ordersService.updateOrder(orderModel).subscribe(() => {
       this.message = 'Record Updated Successfully';
-      this.loadAllOrders();
+      this.refresh();
       this.orderIdUpdate = 0;
       this.orderForm.reset();
       this.toggleAdd = false;
@@ -180,6 +183,11 @@ export class OrdersComponent implements OnInit {
       this.orderForm.controls['customerId'].setValue(order.customerId);
 
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }

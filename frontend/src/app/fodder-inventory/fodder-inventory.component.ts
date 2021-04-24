@@ -13,6 +13,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { FodderType } from './FodderType.enum';
 import { Units } from './Units.enum';
+import { ChangeDetectorRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 /**
  * @title Table with pagination
@@ -34,8 +36,6 @@ export class FodderInventoryComponent implements OnInit {
   toggleAdd: boolean = false;
   toggleViewEdit: boolean = false;
 
-  choosen: number = 0;
-
   public fodderInventoryList: FodderInventoryModel[] = [];
   fodInvForm: any;
 
@@ -51,14 +51,15 @@ export class FodderInventoryComponent implements OnInit {
     return isNaN(Number(item));
   });
 
-  displayedColumns: string[] = ['select', 'fodderInventoryId', 'fodderType', 'fodderVariety', 'units', 'quantityPerUnit', 'totalQuantity', 'pricePerUnit', 'deliveryCharges', 'transportationCharges', 'labourCharges', 'purchasedDate', 'totalCostPerPurchase', 'Actions'];
+  displayedColumns: string[] = ['fodderInventoryId', 'fodderType', 'fodderVariety', 'units', 'quantityPerUnit', 'totalQuantity', 'pricePerUnit', 'deliveryCharges', 'transportationCharges', 'labourCharges', 'purchasedDate', 'totalCostPerPurchase', 'Actions'];
   dataSource : MatTableDataSource<FodderInventoryModel>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private formbulider: FormBuilder, private fodderInventoryService: FodderInventoryService,
-    private modalService: NgbModal, private reactiveForms: ReactiveFormsModule) {
+    private modalService: NgbModal, private reactiveForms: ReactiveFormsModule,
+    private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog,) {
     this.fodderInventoryService.getAllFodderInventoriesList().subscribe(data =>{
       this.fodderInventoryList = data;
       this.dataSource = new MatTableDataSource<FodderInventoryModel>(this.fodderInventoryList);
@@ -85,7 +86,18 @@ export class FodderInventoryComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
 
+  refresh() {
+    this.fodderInventoryService.getAllFodderInventoriesList().subscribe(data => {
+      this.fodderInventoryList = data;
+      this.dataSource = new MatTableDataSource<FodderInventoryModel>(this.fodderInventoryList);
+
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+
+      this.changeDetectorRefs.detectChanges();
+    });
   }
 
   loadAllFodderInventories() {
@@ -96,25 +108,15 @@ export class FodderInventoryComponent implements OnInit {
     this.toggleAdd = true;
   }
 
-  isViewEditClicked() {
-    if (this.choosen != 0) {
+  isViewEditClicked(row) {
       this.toggleViewEdit = true;
-      this.fodderInventoryIdUpdate = this.choosen;
+      this.fodderInventoryIdUpdate = row.fodderInventoryId;
       this.loadFodderInventoryToEdit(this.fodderInventoryIdUpdate);
-    }
-    else {
-      alert("Please choose a record to Update");
-    }
   }
 
-  isDeleteClicked() {
-    if (this.choosen != 0) {
-      this.fodderInventoryIdUpdate = this.choosen;
+  isDeleteClicked(row) {
+      this.fodderInventoryIdUpdate = row.fodderInventoryId;
       this.deleteFodderInventory(this.fodderInventoryIdUpdate);
-    }
-    else {
-      alert("Please choose a record to Delete");
-    }
   }
 
 
@@ -123,19 +125,18 @@ export class FodderInventoryComponent implements OnInit {
     if (this.toggleAdd) {
       this.saveFodderInventory(this.fodderInventoryModel);
     } else if (this.toggleViewEdit) {
-      this.fodderInventoryIdUpdate = this.choosen;
       this.fodderInventoryModel.fodderInventoryId = this.fodderInventoryIdUpdate;
       this.updateFodderInventory(this.fodderInventoryModel);
     }
     this.fodInvForm.reset();
-    this.loadAllFodderInventories();
+    this.refresh();
   }
 
   deleteFodderInventory(fodderInventoryId: Number) {
     if (confirm("Are you sure you want to delete this ?")) {
       this.fodderInventoryService.deleteFodderInventory(fodderInventoryId).subscribe(() => {
         this.message = 'Record Deleted Succefully';
-        this.loadAllFodderInventories();
+        this.refresh();
         this.fodderInventoryIdUpdate = 0;
         this.fodInvForm.reset();
       });
@@ -152,7 +153,7 @@ export class FodderInventoryComponent implements OnInit {
     this.fodderInventoryService.createFodderInventory(fodderInventoryModel).subscribe(
       () => {
         this.message = 'Record Saved Successfully';
-        this.loadAllFodderInventories();
+        this.refresh();
         this.fodderInventoryIdUpdate = 0;
         this.fodInvForm.reset();
         this.toggleAdd = false;
@@ -165,7 +166,7 @@ export class FodderInventoryComponent implements OnInit {
     fodderInventoryModel.fodderInventoryId = this.fodderInventoryIdUpdate;
     this.fodderInventoryService.updateFodderInventory(fodderInventoryModel).subscribe(() => {
       this.message = 'Record Updated Successfully';
-      this.loadAllFodderInventories();
+      this.refresh();
       this.fodderInventoryIdUpdate = 0;
       this.fodInvForm.reset();
       this.toggleAdd = false;
@@ -191,6 +192,11 @@ export class FodderInventoryComponent implements OnInit {
       this.fodInvForm.controls['totalCostPerPurchase'].setValue(fodderInv.totalCostPerPurchase);
 
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
 }

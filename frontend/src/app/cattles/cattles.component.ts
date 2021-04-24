@@ -12,6 +12,9 @@ import { AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort} from '@angular/material/sort'
+import { ChangeDetectorRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+
 
 
 /**
@@ -32,8 +35,6 @@ export class CattlesComponent implements OnInit {
   toggleAdd: boolean = false;
   toggleViewEdit: boolean = false;
 
-  choosen: number = 0;
-
   public cattlesList: CattleModel[] = [];
   cattleForm: any;
 
@@ -45,19 +46,21 @@ export class CattlesComponent implements OnInit {
     return isNaN(Number(item));
   });
 
-  displayedColumns: string[] = ['select', 'cattleId', 'cattleType', 'cattleBreed', 'age', 'milkCapacity', 'lactation', 'deliveryDate', 'calfGendar', 'Actions'];
+  displayedColumns: string[] = ['cattleId', 'cattleType', 'cattleBreed', 'age', 'milkCapacity', 'lactation', 'deliveryDate', 'calfGendar', 'Actions'];
   dataSource : MatTableDataSource<CattleModel>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private formbulider: FormBuilder, private cattlesService: CattlesService,
-    private modalService: NgbModal, private reactiveForms: ReactiveFormsModule) {
+    private modalService: NgbModal, private reactiveForms: ReactiveFormsModule,
+    private changeDetectorRefs: ChangeDetectorRef, private dialog: MatDialog,) {
     this.cattlesService.getCattlesList().subscribe(data => {
       this.cattlesList = data;
       this.dataSource = new MatTableDataSource<CattleModel>(this.cattlesList);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
+      this.changeDetectorRefs.detectChanges();
     });
   }
 
@@ -77,6 +80,19 @@ export class CattlesComponent implements OnInit {
   ngOnInit() {
   }
 
+  refresh() {
+    this.cattlesService.getCattlesList().subscribe(data => {
+      this.cattlesList = data;
+      this.dataSource = new MatTableDataSource<CattleModel>(this.cattlesList);
+
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+
+      this.changeDetectorRefs.detectChanges();
+    });
+
+  }
+
   loadAllCattles() {
     this.allCattles = this.cattlesService.getCattlesList();
   }
@@ -85,46 +101,34 @@ export class CattlesComponent implements OnInit {
     this.toggleAdd = true;
   }
 
-  isViewEditClicked() {
-    if (this.choosen != 0) {
+  isViewEditClicked(row) {
       this.toggleViewEdit = true;
-      this.cattleIdUpdate = this.choosen;
+      this.cattleIdUpdate = row.cattleId;
       this.loadCattleToEdit(this.cattleIdUpdate);
-    }
-    else {
-      alert("Please choose a record to Update");
-    }
   }
 
-  isDeleteClicked() {
-    if (this.choosen != 0) {
-      this.cattleIdUpdate = this.choosen;
+  isDeleteClicked(row) {
+      this.cattleIdUpdate = row.cattleId;
       this.deleteCattle(this.cattleIdUpdate);
-    }
-    else {
-      alert("Please choose a record to Delete");
-    }
   }
-
 
   saveOrUpdate(cattleForm: ReactiveFormsModule) {
     this.cattleModel = this.cattleForm.value;
     if (this.toggleAdd) {
       this.saveCattle(this.cattleModel);
     } else if (this.toggleViewEdit) {
-      this.cattleIdUpdate = this.choosen;
       this.cattleModel.cattleId = this.cattleIdUpdate;
       this.updateCattle(this.cattleModel);
     }
     this.cattleForm.reset();
-    this.loadAllCattles();
+    this.refresh();
   }
 
   deleteCattle(cattleId: number) {
     if (confirm("Are you sure you want to delete this ?")) {
       this.cattlesService.deleteCattleById(cattleId).subscribe(() => {
         this.message = 'Record Deleted Succefully';
-        this.loadAllCattles();
+        this.refresh();;
         this.cattleIdUpdate = 0;
         this.cattleForm.reset();
       });
@@ -135,7 +139,9 @@ export class CattlesComponent implements OnInit {
     this.toggleAdd = false;
     this.toggleViewEdit = false;
     this.cattleForm.reset();
+    this.refresh();
   }
+
 
   saveCattle(cattleModel: CattleModel) {
     this.cattlesService.createCattle(cattleModel).subscribe(
@@ -146,6 +152,7 @@ export class CattlesComponent implements OnInit {
         this.cattleForm.reset();
         this.toggleAdd = false;
         this.toggleViewEdit = false;
+        this.refresh();
       }
     );
   }
@@ -159,6 +166,7 @@ export class CattlesComponent implements OnInit {
       this.cattleForm.reset();
       this.toggleAdd = false;
       this.toggleViewEdit = false;
+      this.refresh();
     });
   }
 
@@ -176,6 +184,11 @@ export class CattlesComponent implements OnInit {
       this.cattleForm.controls['calfGendar'].setValue(cattle.calfGendar);
 
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 
