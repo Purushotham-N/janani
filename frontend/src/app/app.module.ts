@@ -33,6 +33,11 @@ import { FodderInventoryComponent } from './fodder-inventory/fodder-inventory.co
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { CattleDialogComponent } from './cattles/cattle-dialog/cattle-dialog.component';
+import {  ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { CustomerDialogComponent } from './customers/customer-dialog/customer-dialog.component';
+import { OrderDialogComponent } from './orders/order-dialog/order-dialog.component';
+import { FodderInventoryDialogComponent } from './fodder-inventory/fodder-inventory-dialog/fodder-inventory-dialog.component';
 
 
 @NgModule({
@@ -43,7 +48,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MessageComponent,
     OrdersComponent,
     CattlesComponent,
-    FodderInventoryComponent
+    FodderInventoryComponent,
+    CattleDialogComponent,
+    ConfirmDialogComponent,
+    CustomerDialogComponent,
+    OrderDialogComponent,
+    FodderInventoryDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +69,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     FlexLayoutModule,
     IonicModule.forRoot()
   ],
+  entryComponents:[CattleDialogComponent, ConfirmDialogComponent,],
   providers: [CustomersService],
   bootstrap: [AppComponent]
 })

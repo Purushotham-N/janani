@@ -4,11 +4,11 @@ export class OrderModel{
     shifts : number = 0;
     demandQuantity:number = 0;
     supplyQuantity:number = 0;
-    orderDate:Date | undefined ;
-    expectedDOD:Date | undefined;
-    actualDOD:Date | undefined;
+    orderDate:Date = new Date() ;
+    expectedDOD:Date = new Date();
+    actualDOD:Date = new Date();
     customerId:number = 0;
-    
+
 
     getFiedNames(){
         return ["Order Id", "Products", "Shifts", "Demand Quantity", "Supply Quantity", "Order Date", "Expected Delivery", "Actual Delivery", "Customer Id"]

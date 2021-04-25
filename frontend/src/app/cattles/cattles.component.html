@@ -55,26 +55,21 @@
       </ng-container>
 
       <!-- deliveryDate Column -->
-      <ng-container matColumnDef="calfGendar">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Calf Gendar</th>
-        <td mat-cell *matCellDef="let element"> {{element.calfGendar}} </td>
+      <ng-container matColumnDef="sex">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Calf sex</th>
+        <td mat-cell *matCellDef="let element"> {{element.sex}} </td>
       </ng-container>
 
       <!-- actions Column -->
       <ng-container matColumnDef="Actions">
       <th mat-header-cell  *matHeaderCellDef > Actions </th>
       <td mat-cell *matCellDef="let row" >
-        <button mat-icon-button matTooltip="Click to Edit" class="iconbutton" color="primary" (click)="isViewEditClicked(row)">
-
+        <button mat-icon-button matTooltip="Click to Edit" class="iconbutton" color="primary" (click)="edit(row)">
           <mat-icon>edit</mat-icon>
         </button>
-      <button mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn" (click)="isDeleteClicked(row)">
+      <button mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn" (click)="delete(row['cattleId'])">
           <mat-icon>delete</mat-icon>
-          <mat-icon>delete_forever</mat-icon>
         </button>
-
-            <!-- <button mat-button class="mat-raised-button mat-primary" (click)="isViewEditClicked()">Edit</button>&nbsp;&nbsp;
-            <button mat-button class="mat-raised-button mat-primary" (click)="isDeleteClicked()">Delete</button>&nbsp;&nbsp; -->
       </td>
     </ng-container>
 
@@ -86,91 +81,7 @@
         <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
       </div>
 <mat-dialog-actions>
-<button mat-icon-button matTooltip="Click to Add" class="iconbutton" class="mat-raised-button mat-primary" (click)="isAddClicked()">
+<button mat-icon-button matTooltip="Click to Add" class="iconbutton" class="mat-raised-button mat-primary" (click)="add()">
   <mat-icon>add</mat-icon>
 </button>
 </mat-dialog-actions>
-
-
-<div *ngIf="toggleAdd || toggleViewEdit">
-
-    <mat-card>
-        <mat-card-title>Cattle Details</mat-card-title>
-        <mat-card-content>
-
-            <mat-dialog-content [formGroup]="cattleForm">
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label for="cattleType">Cattle Type:</mat-label>
-                        <mat-select formControlName="cattleType" id="cattleType">
-                            <mat-option *ngFor="let cattle of cattleType " [value]="cattle">
-                                {{cattle}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="cattleBreed">Cattle Breed:</mat-label>
-                        <mat-select formControlName="cattleBreed" id="cattleBreed">
-                            <mat-option *ngFor="let breed of cattleBreed " [value]="breed">
-                                {{breed}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="age">Cattle Age:</mat-label>
-                        <input matInput formControlName="age" id="age" type="text" placeholder="Age"
-                            value="{{cattleForm.age}}">
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="milkCapacity">Milk Capacity:</mat-label>
-                        <input matInput formControlName="milkCapacity" id="milkCapacity" type="text"
-                            placeholder="Milk Capacity" value="{{cattleForm.milkCapacity}}">
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="lactation">Lactation:</mat-label>
-                        <input matInput formControlName="lactation" id="lactation" type="text" placeholder="lactation"
-                            value="{{cattleForm.lactation}}">
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="deliveryDate">Delivery Date:</mat-label>
-                        <input matInput formControlName="deliveryDate" [matDatepicker]="deliveryDate"
-                            placeholder="Pick a date">
-                        <mat-datepicker-toggle matSuffix [for]="deliveryDate">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #deliveryDate></mat-datepicker>
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="calfGendar">Calf Gendar:</mat-label>
-                        <input matInput formControlName="calfGendar" id="calfGendar" type="text"
-                            placeholder="male/female" value="{{cattleForm.calfGendar}}">
-                    </mat-form-field>
-
-                </div>
-
-                <div>
-                    {{cattleForm.value | json}}
-                </div>
-
-
-            </mat-dialog-content>
-        </mat-card-content>
-        <mat-dialog-actions>
-
-            <button class="mat-raised-button" (click)="onCancel()">
-                Close
-            </button>
-
-            <button class="mat-raised-button mat-primary" (click)="saveOrUpdate(cattleForm)">
-                Save
-            </button>
-
-        </mat-dialog-actions>
-    </mat-card>
-</div>

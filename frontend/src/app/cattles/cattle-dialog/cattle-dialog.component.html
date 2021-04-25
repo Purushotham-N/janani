@@ -1,0 +1,75 @@
+<h1 mat-dialog-title>Cattle Form</h1>
+<div mat-dialog-content>
+  <form [formGroup]="cattleForm">
+    <div>
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="cattleType">Cattle Type:*</mat-label>
+          <mat-select formControlName="cattleType" id="cattleType">
+              <mat-option *ngFor="let cattle of cattleType" [value]="cattle">
+                  {{cattle}}
+              </mat-option>
+          </mat-select>
+
+        <mat-error *ngIf="cattleForm.controls['cattleType']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="cattleBreed">Cattle Breed:*</mat-label>
+          <mat-select formControlName="cattleBreed" id="cattleBreed">
+              <mat-option *ngFor="let breed of cattleBreed" [value]="breed">
+                  {{breed}}
+              </mat-option>
+          </mat-select>
+
+        <mat-error *ngIf="cattleForm.controls['cattleBreed']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="age">Age *</mat-label>
+          <input matInput type="number" name="age" formControlName="age" />
+          <mat-error *ngIf="cattleForm.controls['age']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="milkCapacity">Milk Capacity *</mat-label>
+          <input matInput type="number" name="milkCapacity" formControlName="milkCapacity" />
+          <mat-error *ngIf="cattleForm.controls['milkCapacity']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="lactation">Lactation *</mat-label>
+          <input matInput type="number" name="lactation" formControlName="lactation" />
+          <mat-error *ngIf="cattleForm.controls['lactation']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="deliveryDate">Delivery Date: *</mat-label>
+          <input matInput formControlName="deliveryDate" [matDatepicker]="deliveryDate"
+              placeholder="Pick a date">
+          <mat-datepicker-toggle matSuffix [for]="deliveryDate">
+          </mat-datepicker-toggle>
+          <mat-datepicker #deliveryDate></mat-datepicker>
+          <mat-error *ngIf="cattleForm.controls['deliveryDate']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="sex">Sex: *</mat-label>
+        <mat-select formControlName="sex" id="sex">
+          <mat-option *ngFor="let kind of sex" [value]="kind">
+              {{kind}}
+          </mat-option>
+      </mat-select>
+        <mat-error *ngIf="cattleForm.controls['sex']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+    </div>
+  </form>
+</div>
+<div class="mt-5" mat-dialog-actions>
+  <button mat-raised-button color="primary"  (click)="save()" cdkFocusInitial >Save</button>
+
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+</div>
+<!-- [disabled]="cattleForm.dirty && cattleForm.errors"  -->
+

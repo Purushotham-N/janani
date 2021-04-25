@@ -5,6 +5,6 @@ export class CattleModel{
     age : number = 0;
     milkCapacity : number = 0;
     lactation : number = 0 ;
-    deliveryDate:Date | undefined;
-    calfGendar: String = "";
+    deliveryDate:Date = new Date();
+    sex: number = 1;
 }

@@ -42,8 +42,6 @@ export class CattlesService {
   updateCattle(cattle: CattleModel): Observable<CattleModel> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
     let id:number = cattle.cattleId;
-    console.log("service: updateCattle:::"+this.URI+id);
-    console.log("URL printing:"+this.URI+cattle.cattleId);
     return this.http.put<CattleModel>(this.URI+id, cattle, httpOptions);
   }
 

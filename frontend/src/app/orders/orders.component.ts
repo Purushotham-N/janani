@@ -13,6 +13,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { OrderDialogComponent } from './order-dialog/order-dialog.component';
 
 
 /**
@@ -26,24 +28,12 @@ import { MatDialog } from '@angular/material/dialog';
 export class OrdersComponent implements OnInit {
   orderModel: OrderModel = new OrderModel;
   allOrders?: Observable<OrderModel[]>;
-  orderIdUpdate: number = 0;
   message = "";
 
   title = "List of Orders";
-  toggleAdd: boolean = false;
-  toggleViewEdit: boolean = false;
-
 
   public ordersList: OrderModel[] = [];
   orderForm: any;
-
-  products = Object.keys(Products).filter((item) => {
-    return isNaN(Number(item));
-  });
-
-  shifts = Object.keys(Shifts).filter((item) => {
-    return isNaN(Number(item));
-  });
 
   displayedColumns: string[] = ['orderId', 'products', 'shifts', 'demandQuantity', 'supplyQuantity', 'actualDOD', 'customerId', 'Actions'];
   dataSource : MatTableDataSource<OrderModel>;
@@ -98,81 +88,69 @@ export class OrdersComponent implements OnInit {
     this.allOrders = this.ordersService.getOrdersList();
   }
 
-  isAddClicked() {
-    this.toggleAdd = true;
+  add() {
+    const data = new OrderModel();
+    const dialogRef = this.dialog.open(OrderDialogComponent, {
+      width: '400px',
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveOrder(result);
+      }
+    });
   }
 
-  isViewEditClicked(row) {
-      this.toggleViewEdit = true;
-      this.orderIdUpdate = row.orderId;
-      this.loadCustomerToEdit(this.orderIdUpdate);
+  edit(data: OrderModel) {
+    const dialogRef = this.dialog.open(OrderDialogComponent, {
+      width: '400px',
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateOrder(result);
+      }
+    });
   }
 
-  isDeleteClicked(row) {
-      this.orderIdUpdate = row.orderId;
-      this.deleteCustomer(this.orderIdUpdate);
+  delete(id: any) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteOrder(id);
+      }
+    });
   }
 
 
-  saveOrUpdate(customerForm: ReactiveFormsModule) {
-    this.orderModel = this.orderForm.value;
-    if (this.toggleAdd) {
-      this.saveOrder(this.orderModel);
-    } else if (this.toggleViewEdit) {
-      this.orderModel.orderId = this.orderIdUpdate;
-      this.updateOrder(this.orderModel);
-    }
-    this.orderForm.reset();
-    this.refresh();
-  }
-
-  deleteCustomer(orderId: number) {
-    if (confirm("Are you sure you want to delete this ?")) {
+  deleteOrder(orderId: number) {
       this.ordersService.deleteOrderById(orderId).subscribe(() => {
         this.message = 'Record Deleted Succefully';
         this.refresh();
-        this.orderIdUpdate = 0;
-        this.orderForm.reset();
       });
     }
-  }
-
-  onCancel() {
-    this.toggleAdd = false;
-    this.toggleViewEdit = false;
-    this.orderForm.reset();
-  }
 
   saveOrder(orderModel: OrderModel) {
     this.ordersService.createOrder(orderModel).subscribe(
       () => {
         this.message = 'Record Saved Successfully';
         this.refresh();
-        this.orderIdUpdate = 0;
-        this.orderForm.reset();
-        this.toggleAdd = false;
-        this.toggleViewEdit = false;
       }
     );
   }
 
   updateOrder(orderModel: OrderModel) {
-    orderModel.orderId = this.orderIdUpdate;
     this.ordersService.updateOrder(orderModel).subscribe(() => {
       this.message = 'Record Updated Successfully';
       this.refresh();
-      this.orderIdUpdate = 0;
-      this.orderForm.reset();
-      this.toggleAdd = false;
-      this.toggleViewEdit = false;
     });
   }
 
   loadCustomerToEdit(orderId: number) {
     this.ordersService.getOrderById(orderId).subscribe(order => {
       this.message = "";
-
-      this.orderIdUpdate = order.orderId;
       this.orderForm.controls['products'].setValue(order.products);
       this.orderForm.controls['shifts'].setValue(order.shifts);
       this.orderForm.controls['demandQuantity'].setValue(order.demandQuantity);

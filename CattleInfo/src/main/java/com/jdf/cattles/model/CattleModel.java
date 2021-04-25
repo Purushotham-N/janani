@@ -47,8 +47,9 @@ public class CattleModel {
 	@Column(name = "recent_delivery_date")
 	private LocalDateTime deliveryDate;
 
-	@Column(name = "calf_gendar")
-	private String calfGendar;
+	@Column(name = "calf_sex")
+	@NotNull
+	private Sex sex;
 
 	public long getCattleId() {
 		return cattleId;
@@ -108,13 +109,12 @@ public class CattleModel {
 		this.deliveryDate = deliveryDate;
 	}
 
-	public String getCalfGendar() {
-		return calfGendar;
+	public Sex getSex() {
+		return sex;
 	}
 
-	public void setCalfGendar(String calfGendar) {
-		this.calfGendar = calfGendar;
+	public void setSex(Sex sex) {
+		this.sex = sex;
 	}
-
 
 }

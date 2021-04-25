@@ -46,8 +46,8 @@ public class CattleService {
 		if (patch.getAge() != 0) {
 			cattle.setAge(patch.getAge());
 		}
-		if (patch.getCalfGendar() != null) {
-			cattle.setCalfGendar(patch.getCalfGendar());
+		if (patch.getSex() != null) {
+			cattle.setSex(patch.getSex());
 		}
 		if (patch.getCattleType() != null) {
 			cattle.setCattleType(patch.getCattleType());

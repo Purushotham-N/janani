@@ -1,0 +1,100 @@
+<h1 mat-dialog-title>Cattle Form</h1>
+<div mat-dialog-content>
+  <form [formGroup]="fodInvForm">
+    <div>
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="fodderType">Fodder Type:*</mat-label>
+          <mat-select formControlName="fodderType" id="fodderType">
+              <mat-option *ngFor="let type of fodderType" [value]="type">
+                  {{type}}
+              </mat-option>
+          </mat-select>
+
+        <mat-error *ngIf="fodInvForm.controls['fodderType']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="fodderVariety">Fodder variety:*</mat-label>
+          <mat-select formControlName="fodderVariety" id="fodderVariety">
+              <mat-option *ngFor="let variety of fodderVariety" [value]="variety">
+                  {{variety}}
+              </mat-option>
+          </mat-select>
+
+        <mat-error *ngIf="fodInvForm.controls['fodderVariety']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="units">Units:*</mat-label>
+          <mat-select formControlName="units" id="units">
+              <mat-option *ngFor="let unit of units" [value]="unit">
+                  {{unit}}
+              </mat-option>
+          </mat-select>
+
+        <mat-error *ngIf="fodInvForm.controls['units']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="quantityPerUnit">No of units *</mat-label>
+          <input matInput type="number" name="quantityPerUnit" formControlName="quantityPerUnit" />
+          <mat-error *ngIf="fodInvForm.controls['quantityPerUnit']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="totalQuantity">Total Quantity *</mat-label>
+          <input matInput type="number" name="totalQuantity" formControlName="totalQuantity" />
+          <mat-error *ngIf="fodInvForm.controls['totalQuantity']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="pricePerUnit">unit price *</mat-label>
+          <input matInput type="number" name="pricePerUnit" formControlName="pricePerUnit" />
+          <mat-error *ngIf="fodInvForm.controls['pricePerUnit']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="deliveryCharges">delivery charge *</mat-label>
+          <input matInput type="number" name="deliveryCharges" formControlName="deliveryCharges" />
+          <mat-error *ngIf="fodInvForm.controls['deliveryCharges']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="transportationCharges">transport charge *</mat-label>
+          <input matInput type="number" name="transportationCharges" formControlName="transportationCharges" />
+          <mat-error *ngIf="fodInvForm.controls['transportationCharges']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="labourCharges">labour charge *</mat-label>
+          <input matInput type="number" name="labourCharges" formControlName="labourCharges" />
+          <mat-error *ngIf="fodInvForm.controls['labourCharges']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="purchasedDate">Purchased Date: *</mat-label>
+          <input matInput formControlName="purchasedDate" [matDatepicker]="purchasedDate"
+              placeholder="Pick a date">
+          <mat-datepicker-toggle matSuffix [for]="purchasedDate">
+          </mat-datepicker-toggle>
+          <mat-datepicker #purchasedDate></mat-datepicker>
+          <mat-error *ngIf="fodInvForm.controls['purchasedDate']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="totalCostPerPurchase">Total cost *</mat-label>
+        <input matInput type="number" name="totalCostPerPurchase" formControlName="totalCostPerPurchase" />
+        <mat-error *ngIf="fodInvForm.controls['totalCostPerPurchase']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+    </div>
+  </form>
+</div>
+<div class="mt-5" mat-dialog-actions>
+  <button mat-raised-button color="primary"  (click)="save()" cdkFocusInitial >Save</button>
+
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+</div>
+<!-- [disabled]="fodInvForm.dirty && fodInvForm.errors"  -->
+

@@ -9,8 +9,6 @@
 
 <div  class="mat-elevation-z8">
 <table mat-table [dataSource]="dataSource" matSort>
-<!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
 
     <!-- customerId Column -->
     <ng-container matColumnDef="customerId">
@@ -52,13 +50,12 @@
     <ng-container matColumnDef="Actions">
     <th mat-header-cell  *matHeaderCellDef > Actions </th>
     <td mat-cell *matCellDef="let row" >
-      <button mat-icon-button matTooltip="Click to Edit" class="iconbutton" color="primary" (click)="isViewEditClicked(row)">
+      <button mat-icon-button matTooltip="Click to Edit" class="iconbutton" color="primary" (click)="edit(row)">
 
         <mat-icon>edit</mat-icon>
       </button>
-    <button mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn" (click)="isDeleteClicked(row)">
+    <button mat-icon-button matTooltip="Click to Delete" class="iconbutton" color="warn" (click)="delete(row['customerId'])">
         <mat-icon>delete</mat-icon>
-        <mat-icon>delete_forever</mat-icon>
       </button>
     </td>
   </ng-container>
@@ -73,73 +70,11 @@
 
 
 <mat-dialog-actions>
-  <button mat-icon-button matTooltip="Click to Add" class="iconbutton" class="mat-raised-button mat-primary" (click)="isAddClicked()">
+  <button mat-icon-button matTooltip="Click to Add" class="iconbutton" class="mat-raised-button mat-primary" (click)="add()">
     <mat-icon>add</mat-icon>
   </button>
 </mat-dialog-actions>
 
-
-<div *ngIf="toggleAdd || toggleViewEdit">
-
-    <mat-card>
-        <mat-card-title>Customer Details</mat-card-title>
-        <mat-card-content>
-
-            <mat-dialog-content [formGroup]="customerForm">
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <mat-label for="firstName">First Name:</mat-label>
-                            <input matInput formControlName="firstName" id="firstName" type="text" placeholder="First Name"
-                                value="{{customerForm.firstName}}">
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="lastName">Last Name:</mat-label>
-                            <input matInput formControlName="lastName" id="lastName" type="text" placeholder="Last Name"
-                                value="{{customerForm.lastName}}">
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="mobileNo">Mobile No:</mat-label>
-                            <input matInput formControlName="mobileNo" id="mobileNo" type="text" placeholder="Mobile No"
-                                value="{{customerForm.mobileNo}}">
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="whatsappNo">Whatsapp No:</mat-label>
-                            <input matInput formControlName="whatsappNo" id="whatsappNo" type="text" placeholder="Whatsapp No"
-                                value="{{customerForm.whatsappNo}}">
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label for="address">Address:</mat-label>
-                            <input matInput formControlName="address" id="address" type="text" placeholder="Address"
-                                value="{{customerForm.address}}">
-                    </mat-form-field>
-
-                </div>
-
-                <div>
-                    {{customerForm.value | json}}
-                </div>
-
-
-            </mat-dialog-content>
-        </mat-card-content>
-        <mat-dialog-actions>
-
-            <button class="mat-raised-button" (click)="onCancel()">
-                Close
-            </button>
-
-            <button class="mat-raised-button mat-primary" (click)="saveOrUpdate(customerForm)">
-                Save
-            </button>
-
-        </mat-dialog-actions>
-    </mat-card>
-</div>
 
 
 

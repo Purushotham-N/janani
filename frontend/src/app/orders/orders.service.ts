@@ -9,7 +9,7 @@ import { Observable, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class OrdersService {
-  
+
   constructor(private http: HttpClient) { }
   private URI: string = "http://127.0.0.1:8083/api/v1/orders/";
 
@@ -33,22 +33,32 @@ export class OrdersService {
     })
   }
 
-  createOrder(order: OrderModel): Observable<OrderModel> {  
-    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };  
-    return this.http.post<OrderModel>(this.URI, order, httpOptions);  
-  }  
+  createOrder(order: OrderModel): Observable<OrderModel> {
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
+    console.log("service: createOrder:::"+this.URI);
+    console.log("order id:"+order.orderId);
+    console.log("product:"+order.products);
+    console.log("shift:"+order.shifts);
+    console.log("order date:"+order.orderDate);
+    console.log("exp dod:"+order.expectedDOD);
+    console.log("demand:"+order.demandQuantity);
+    console.log("supply:"+order.supplyQuantity);
+    console.log("cust id:"+order.customerId);
 
-  updateOrder(order: OrderModel): Observable<OrderModel> {  
+    return this.http.post<OrderModel>(this.URI, order, httpOptions);
+  }
+
+  updateOrder(order: OrderModel): Observable<OrderModel> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
     let id:number = order.orderId;
     console.log("service: updateOrder:::"+this.URI+id);
-    console.log("URL printing:"+this.URI+order.orderId);  
-    return this.http.put<OrderModel>(this.URI+id, order, httpOptions);  
-  } 
+    console.log("URL printing:"+this.URI+order.orderId);
+    return this.http.put<OrderModel>(this.URI+id, order, httpOptions);
+  }
 
   public deleteOrderById(id:number): Observable<OrderModel> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
     return this.http.delete<OrderModel>(this.URI+id, httpOptions );;
   }
-  
+
 }

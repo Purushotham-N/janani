@@ -1,24 +1,24 @@
-import { MatSortModule } from '@angular/material/sort';
-import { CattleBreed } from './CattleBreed.enum';
-import { CattleType } from './CattleType.enum';
 import { CattleModel } from './cattle_model';
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CattlesService } from './cattles.service';
 
-import { AfterViewInit, ViewChild } from '@angular/core';
+import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort} from '@angular/material/sort'
 import { ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { CattleDialogComponent } from './cattle-dialog/cattle-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+
 
 
 
 /**
- * @title Table with pagination
+ * @title Table with filter, sort and pagination
  */
 @Component({
   selector: 'cattles',
@@ -28,25 +28,14 @@ import { MatDialog } from '@angular/material/dialog';
 export class CattlesComponent implements OnInit {
   cattleModel: CattleModel = new CattleModel;
   allCattles?: Observable<CattleModel[]>;
-  cattleIdUpdate: number = 0;
   message = "";
 
   title = "List of Cattles";
-  toggleAdd: boolean = false;
-  toggleViewEdit: boolean = false;
+  cattleForm: FormGroup;
 
   public cattlesList: CattleModel[] = [];
-  cattleForm: any;
 
-  cattleType = Object.keys(CattleType).filter((item) => {
-    return isNaN(Number(item));
-  });
-
-  cattleBreed = Object.keys(CattleBreed).filter((item) => {
-    return isNaN(Number(item));
-  });
-
-  displayedColumns: string[] = ['cattleId', 'cattleType', 'cattleBreed', 'age', 'milkCapacity', 'lactation', 'deliveryDate', 'calfGendar', 'Actions'];
+  displayedColumns: string[] = ['cattleId', 'cattleType', 'cattleBreed', 'age', 'milkCapacity', 'lactation', 'deliveryDate', 'sex', 'Actions'];
   dataSource : MatTableDataSource<CattleModel>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -73,7 +62,7 @@ export class CattlesComponent implements OnInit {
       milkCapacity: ['', [Validators.required]],
       lactation: ['', [Validators.required]],
       deliveryDate: ['', [Validators.required]],
-      calfGendar: ['', [Validators.required]],
+      sex: ['', [Validators.required]],
     });
   }
 
@@ -97,49 +86,48 @@ export class CattlesComponent implements OnInit {
     this.allCattles = this.cattlesService.getCattlesList();
   }
 
-  isAddClicked() {
-    this.toggleAdd = true;
+  add() {
+    const data = new CattleModel();
+    const dialogRef = this.dialog.open(CattleDialogComponent, {
+      width: '400px',
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveCattle(result);
+      }
+    });
   }
 
-  isViewEditClicked(row) {
-      this.toggleViewEdit = true;
-      this.cattleIdUpdate = row.cattleId;
-      this.loadCattleToEdit(this.cattleIdUpdate);
+  edit(data: CattleModel) {
+    const dialogRef = this.dialog.open(CattleDialogComponent, {
+      width: '400px',
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateCattle(result);
+      }
+    });
   }
 
-  isDeleteClicked(row) {
-      this.cattleIdUpdate = row.cattleId;
-      this.deleteCattle(this.cattleIdUpdate);
-  }
-
-  saveOrUpdate(cattleForm: ReactiveFormsModule) {
-    this.cattleModel = this.cattleForm.value;
-    if (this.toggleAdd) {
-      this.saveCattle(this.cattleModel);
-    } else if (this.toggleViewEdit) {
-      this.cattleModel.cattleId = this.cattleIdUpdate;
-      this.updateCattle(this.cattleModel);
-    }
-    this.cattleForm.reset();
-    this.refresh();
+  delete(id: any) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteCattle(id);
+      }
+    });
   }
 
   deleteCattle(cattleId: number) {
-    if (confirm("Are you sure you want to delete this ?")) {
+
       this.cattlesService.deleteCattleById(cattleId).subscribe(() => {
         this.message = 'Record Deleted Succefully';
-        this.refresh();;
-        this.cattleIdUpdate = 0;
-        this.cattleForm.reset();
+        this.refresh();
       });
-    }
-  }
-
-  onCancel() {
-    this.toggleAdd = false;
-    this.toggleViewEdit = false;
-    this.cattleForm.reset();
-    this.refresh();
   }
 
 
@@ -147,25 +135,14 @@ export class CattlesComponent implements OnInit {
     this.cattlesService.createCattle(cattleModel).subscribe(
       () => {
         this.message = 'Record Saved Successfully';
-        this.loadAllCattles();
-        this.cattleIdUpdate = 0;
-        this.cattleForm.reset();
-        this.toggleAdd = false;
-        this.toggleViewEdit = false;
         this.refresh();
       }
     );
   }
 
   updateCattle(cattleModel: CattleModel) {
-    cattleModel.cattleId = this.cattleIdUpdate;
-    this.cattlesService.updateCattle(cattleModel).subscribe(() => {
+      this.cattlesService.updateCattle(cattleModel).subscribe(() => {
       this.message = 'Record Updated Successfully';
-      this.loadAllCattles();
-      this.cattleIdUpdate = 0;
-      this.cattleForm.reset();
-      this.toggleAdd = false;
-      this.toggleViewEdit = false;
       this.refresh();
     });
   }
@@ -173,16 +150,13 @@ export class CattlesComponent implements OnInit {
   loadCattleToEdit(cattleId: number) {
     this.cattlesService.getCattleById(cattleId).subscribe(cattle => {
       this.message = "";
-
-      this.cattleIdUpdate = cattle.cattleId;
       this.cattleForm.controls['cattleType'].setValue(cattle.cattleType);
       this.cattleForm.controls['cattleBreed'].setValue(cattle.cattleBreed);
       this.cattleForm.controls['age'].setValue(cattle.age);
       this.cattleForm.controls['milkCapacity'].setValue(cattle.milkCapacity);
       this.cattleForm.controls['lactation'].setValue(cattle.lactation);
       this.cattleForm.controls['deliveryDate'].setValue(cattle.deliveryDate);
-      this.cattleForm.controls['calfGendar'].setValue(cattle.calfGendar);
-
+      this.cattleForm.controls['sex'].setValue(cattle.sex);
     });
   }
 

@@ -1,3 +1,4 @@
+import { CustomerDialogComponent } from './customer-dialog/customer-dialog.component';
 import { MatSort } from '@angular/material/sort';
 import { CustomerModel } from './customer_model';
 import { Component, OnInit } from '@angular/core';
@@ -11,10 +12,11 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 
 /**
- * @title Table with pagination
+ * @title Table with filter, sort and pagination
  */
 @Component({
   selector: 'customers',
@@ -24,12 +26,10 @@ import { MatDialog } from '@angular/material/dialog';
 export class CustomersComponent implements AfterViewInit{
   customerModel: CustomerModel = new CustomerModel;
   allCustomers?: Observable<CustomerModel[]> ;
-  customerIdUpdate: number = 0;
+
   message = "";
 
   title = "List of Customers";
-  toggleAdd : boolean = false;
-  toggleViewEdit : boolean = false;
 
   public customersList: CustomerModel[] = [];
   customerForm: any;
@@ -79,49 +79,49 @@ export class CustomersComponent implements AfterViewInit{
     this.allCustomers = this.customersService.getCustomersList();
   }
 
-  isAddClicked(){
-    this.toggleAdd = true;
+  add() {
+    const data = new CustomerModel();
+    const dialogRef = this.dialog.open(CustomerDialogComponent, {
+      width: '400px',
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveCustomer(result);
+      }
+    });
   }
 
-  isViewEditClicked(row){
-      this.toggleViewEdit = true;
-      this.customerIdUpdate = row.customerId;
-      this.loadCustomerToEdit(this.customerIdUpdate);
+  edit(data: CustomerModel) {
+    const dialogRef = this.dialog.open(CustomerDialogComponent, {
+      width: '400px',
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateCustomer(result);
+      }
+    });
   }
 
-  isDeleteClicked(row){
-    this.customerIdUpdate = row.customerId;
-      this.deleteCustomer(this.customerIdUpdate);
-  }
-
-
-  saveOrUpdate(customerForm:ReactiveFormsModule) {
-    this.customerModel = this.customerForm.value;
-    if (this.toggleAdd) {
-      this.saveCustomer(this.customerModel);
-    }else if(this.toggleViewEdit){
-      this.customerModel.customerId = this.customerIdUpdate;
-      this.updateCustomer(this.customerModel);
-    }
-    this.customerForm.reset();
-    this.refresh();
+  delete(id: any) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteCustomer(id);
+      }
+    });
   }
 
   deleteCustomer(customerId: number) {
-    if (confirm("Are you sure you want to delete this ?")) {
       this.customersService.deleteCustomerById(customerId).subscribe(() => {
         this.message = 'Record Deleted Succefully';
         this.refresh();
-        this.customerIdUpdate = 0;
-        this.customerForm.reset();
+        this.loadAllCustomers();
+        this.refresh();;
       });
-    }
-  }
-
-  onCancel() {
-    this.toggleAdd = false;
-    this.toggleViewEdit = false;
-    this.customerForm.reset();
   }
 
   saveCustomer(customerModel: CustomerModel){
@@ -129,23 +129,14 @@ export class CustomersComponent implements AfterViewInit{
         () => {
           this.message = 'Record Saved Successfully';
           this.refresh();
-          this.customerIdUpdate = 0;
-          this.customerForm.reset();
-          this.toggleAdd = false;
-          this.toggleViewEdit = false;
         }
       );
   }
 
   updateCustomer(customerModel: CustomerModel){
-      customerModel.customerId =  this.customerIdUpdate;
       this.customersService.updateCustomer(customerModel).subscribe(() => {
         this.message = 'Record Updated Successfully';
         this.refresh();
-        this.customerIdUpdate = 0;
-        this.customerForm.reset();
-        this.toggleAdd = false;
-        this.toggleViewEdit = false;
       });
   }
 
@@ -153,7 +144,6 @@ export class CustomersComponent implements AfterViewInit{
     this.customersService.getCustomerById(customerId).subscribe(customer=> {
       this.message = "";
 
-      this.customerIdUpdate = customer.customerId;
       this.customerForm.controls['firstName'].setValue(customer.firstName);
       this.customerForm.controls['lastName'].setValue(customer.lastName);
       this.customerForm.controls['mobileNo'].setValue(customer.mobileNo);

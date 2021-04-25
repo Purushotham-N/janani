@@ -1,0 +1,85 @@
+<h1 mat-dialog-title>Cattle Form</h1>
+<div mat-dialog-content>
+  <form [formGroup]="orderForm">
+    <div>
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="products">Products:*</mat-label>
+          <mat-select formControlName="products" id="products">
+              <mat-option *ngFor="let product of products" [value]="product">
+                  {{product}}
+              </mat-option>
+          </mat-select>
+
+        <mat-error *ngIf="orderForm.controls['products']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="shifts">Shifts:*</mat-label>
+          <mat-select formControlName="shifts" id="shifts">
+              <mat-option *ngFor="let shift of shifts" [value]="shift">
+                  {{shift}}
+              </mat-option>
+          </mat-select>
+
+        <mat-error *ngIf="orderForm.controls['shifts']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="demandQuantity">Demand Quantity *</mat-label>
+          <input matInput type="number" name="demandQuantity" formControlName="demandQuantity" />
+          <mat-error *ngIf="orderForm.controls['demandQuantity']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="supplyQuantity">Supply Quantity *</mat-label>
+          <input matInput type="number" name="supplyQuantity" formControlName="supplyQuantity" />
+          <mat-error *ngIf="orderForm.controls['supplyQuantity']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="orderDate">Order Date: *</mat-label>
+          <input matInput formControlName="orderDate" [matDatepicker]="orderDate"
+              placeholder="Pick a date">
+          <mat-datepicker-toggle matSuffix [for]="orderDate">
+          </mat-datepicker-toggle>
+          <mat-datepicker #orderDate></mat-datepicker>
+          <mat-error *ngIf="orderForm.controls['orderDate']?.errors?.required">field required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="fullWidth" appearance="outline">
+        <mat-label for="expectedDOD">Expected Delivery Date: *</mat-label>
+        <input matInput formControlName="expectedDOD" [matDatepicker]="expectedDOD"
+            placeholder="Pick a date">
+        <mat-datepicker-toggle matSuffix [for]="expectedDOD">
+        </mat-datepicker-toggle>
+        <mat-datepicker #expectedDOD></mat-datepicker>
+        <mat-error *ngIf="orderForm.controls['expectedDOD']?.errors?.required">field required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="fullWidth" appearance="outline">
+      <mat-label for="actualDOD">Actual Delivery Date: *</mat-label>
+      <input matInput formControlName="actualDOD" [matDatepicker]="actualDOD"
+          placeholder="Pick a date">
+      <mat-datepicker-toggle matSuffix [for]="actualDOD">
+      </mat-datepicker-toggle>
+      <mat-datepicker #actualDOD></mat-datepicker>
+      <mat-error *ngIf="orderForm.controls['actualDOD']?.errors?.required">field required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="fullWidth" appearance="outline">
+    <mat-label for="customerId">Customer Id *</mat-label>
+    <input matInput type="number" name="customerId" formControlName="customerId" />
+    <mat-error *ngIf="orderForm.controls['customerId']?.errors?.required">field required</mat-error>
+  </mat-form-field>
+
+    </div>
+  </form>
+</div>
+<div class="mt-5" mat-dialog-actions>
+  <button mat-raised-button color="primary"  (click)="save()" cdkFocusInitial >Save</button>
+
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+</div>
+<!-- [disabled]="orderForm.dirty && orderForm.errors"  -->
+

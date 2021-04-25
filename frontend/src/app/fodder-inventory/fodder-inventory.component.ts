@@ -15,6 +15,8 @@ import { FodderType } from './FodderType.enum';
 import { Units } from './Units.enum';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { FodderInventoryDialogComponent } from './fodder-inventory-dialog/fodder-inventory-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 /**
  * @title Table with pagination
@@ -29,27 +31,16 @@ export class FodderInventoryComponent implements OnInit {
 
   fodderInventoryModel: FodderInventoryModel = new FodderInventoryModel;
   allFodderInventories?: Observable<FodderInventoryModel[]>;
-  fodderInventoryIdUpdate: Number = 0;
+
   message = "";
 
   title = "Fodder Inventories";
-  toggleAdd: boolean = false;
-  toggleViewEdit: boolean = false;
+
 
   public fodderInventoryList: FodderInventoryModel[] = [];
   fodInvForm: any;
 
-  fodderType = Object.keys(FodderType).filter((item) => {
-    return isNaN(Number(item));
-  });
 
-  fodderVariety = Object.keys(FodderVariety).filter((item) => {
-    return isNaN(Number(item));
-  });
-
-  units = Object.keys(Units).filter((item) => {
-    return isNaN(Number(item));
-  });
 
   displayedColumns: string[] = ['fodderInventoryId', 'fodderType', 'fodderVariety', 'units', 'quantityPerUnit', 'totalQuantity', 'pricePerUnit', 'deliveryCharges', 'transportationCharges', 'labourCharges', 'purchasedDate', 'totalCostPerPurchase', 'Actions'];
   dataSource : MatTableDataSource<FodderInventoryModel>;
@@ -104,49 +95,47 @@ export class FodderInventoryComponent implements OnInit {
     this.allFodderInventories = this.fodderInventoryService.getAllFodderInventoriesList();
   }
 
-  isAddClicked() {
-    this.toggleAdd = true;
+  add() {
+    const data = new FodderInventoryModel();
+    const dialogRef = this.dialog.open(FodderInventoryDialogComponent, {
+      width: '400px',
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveFodderInventory(result);
+      }
+    });
   }
 
-  isViewEditClicked(row) {
-      this.toggleViewEdit = true;
-      this.fodderInventoryIdUpdate = row.fodderInventoryId;
-      this.loadFodderInventoryToEdit(this.fodderInventoryIdUpdate);
+  edit(data: FodderInventoryModel) {
+    const dialogRef = this.dialog.open(FodderInventoryDialogComponent, {
+      width: '400px',
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateFodderInventory(result);
+      }
+    });
   }
 
-  isDeleteClicked(row) {
-      this.fodderInventoryIdUpdate = row.fodderInventoryId;
-      this.deleteFodderInventory(this.fodderInventoryIdUpdate);
-  }
-
-
-  saveOrUpdate(fodInvForm: ReactiveFormsModule) {
-    this.fodderInventoryModel = this.fodInvForm.value;
-    if (this.toggleAdd) {
-      this.saveFodderInventory(this.fodderInventoryModel);
-    } else if (this.toggleViewEdit) {
-      this.fodderInventoryModel.fodderInventoryId = this.fodderInventoryIdUpdate;
-      this.updateFodderInventory(this.fodderInventoryModel);
-    }
-    this.fodInvForm.reset();
-    this.refresh();
+  delete(id: any) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteFodderInventory(id);
+      }
+    });
   }
 
   deleteFodderInventory(fodderInventoryId: Number) {
-    if (confirm("Are you sure you want to delete this ?")) {
       this.fodderInventoryService.deleteFodderInventory(fodderInventoryId).subscribe(() => {
         this.message = 'Record Deleted Succefully';
         this.refresh();
-        this.fodderInventoryIdUpdate = 0;
-        this.fodInvForm.reset();
       });
-    }
-  }
-
-  onCancel() {
-    this.toggleAdd = false;
-    this.toggleViewEdit = false;
-    this.fodInvForm.reset();
   }
 
   saveFodderInventory(fodderInventoryModel: FodderInventoryModel) {
@@ -154,45 +143,35 @@ export class FodderInventoryComponent implements OnInit {
       () => {
         this.message = 'Record Saved Successfully';
         this.refresh();
-        this.fodderInventoryIdUpdate = 0;
-        this.fodInvForm.reset();
-        this.toggleAdd = false;
-        this.toggleViewEdit = false;
       }
     );
   }
 
   updateFodderInventory(fodderInventoryModel: FodderInventoryModel) {
-    fodderInventoryModel.fodderInventoryId = this.fodderInventoryIdUpdate;
     this.fodderInventoryService.updateFodderInventory(fodderInventoryModel).subscribe(() => {
       this.message = 'Record Updated Successfully';
       this.refresh();
-      this.fodderInventoryIdUpdate = 0;
-      this.fodInvForm.reset();
-      this.toggleAdd = false;
-      this.toggleViewEdit = false;
     });
   }
 
-  loadFodderInventoryToEdit(fodderInventoryId: Number) {
-    this.fodderInventoryService.getFodderInventoryById(fodderInventoryId).subscribe(fodderInv => {
-      this.message = "";
+  // loadFodderInventoryToEdit(fodderInventoryId: Number) {
+  //   this.fodderInventoryService.getFodderInventoryById(fodderInventoryId).subscribe(fodderInv => {
+  //     this.message = "";
 
-      this.fodderInventoryIdUpdate = fodderInv.fodderInventoryId;
-      this.fodInvForm.controls['fodderType'].setValue(fodderInv.fodderType);
-      this.fodInvForm.controls['fodderVariety'].setValue(fodderInv.fodderVariety);
-      this.fodInvForm.controls['units'].setValue(fodderInv.units);
-      this.fodInvForm.controls['quantityPerUnit'].setValue(fodderInv.quantityPerUnit);
-      this.fodInvForm.controls['totalQuantity'].setValue(fodderInv.totalQuantity);
-      this.fodInvForm.controls['pricePerUnit'].setValue(fodderInv.pricePerUnit);
-      this.fodInvForm.controls['deliveryCharges'].setValue(fodderInv.deliveryCharges);
-      this.fodInvForm.controls['transportationCharges'].setValue(fodderInv.transportationCharges);
-      this.fodInvForm.controls['labourCharges'].setValue(fodderInv.labourCharges);
-      this.fodInvForm.controls['purchasedDate'].setValue(fodderInv.purchasedDate);
-      this.fodInvForm.controls['totalCostPerPurchase'].setValue(fodderInv.totalCostPerPurchase);
+  //     this.fodInvForm.controls['fodderType'].setValue(fodderInv.fodderType);
+  //     this.fodInvForm.controls['fodderVariety'].setValue(fodderInv.fodderVariety);
+  //     this.fodInvForm.controls['units'].setValue(fodderInv.units);
+  //     this.fodInvForm.controls['quantityPerUnit'].setValue(fodderInv.quantityPerUnit);
+  //     this.fodInvForm.controls['totalQuantity'].setValue(fodderInv.totalQuantity);
+  //     this.fodInvForm.controls['pricePerUnit'].setValue(fodderInv.pricePerUnit);
+  //     this.fodInvForm.controls['deliveryCharges'].setValue(fodderInv.deliveryCharges);
+  //     this.fodInvForm.controls['transportationCharges'].setValue(fodderInv.transportationCharges);
+  //     this.fodInvForm.controls['labourCharges'].setValue(fodderInv.labourCharges);
+  //     this.fodInvForm.controls['purchasedDate'].setValue(fodderInv.purchasedDate);
+  //     this.fodInvForm.controls['totalCostPerPurchase'].setValue(fodderInv.totalCostPerPurchase);
 
-    });
-  }
+  //   });
+  // }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

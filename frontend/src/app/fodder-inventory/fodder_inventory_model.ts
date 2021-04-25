@@ -9,6 +9,6 @@ export class FodderInventoryModel{
     deliveryCharges: Number = 0 ;
     transportationCharges: Number = 0 ;
     labourCharges: Number = 0 ;
-    purchasedDate: Date = null ;
+    purchasedDate: Date = new Date() ;
     totalCostPerPurchase: Number = 0 ;
 }

@@ -1,0 +1,44 @@
+<h1 mat-dialog-title>Cattle Form</h1>
+<div mat-dialog-content>
+  <form [formGroup]="customerForm">
+    <div>
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="firstName">First Name *</mat-label>
+          <input matInput type="text" name="firstName" formControlName="firstName" />
+          <mat-error *ngIf="customerForm.controls['firstName']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="lastName">Last Name *</mat-label>
+          <input matInput type="text" name="lastName" formControlName="lastName" />
+          <mat-error *ngIf="customerForm.controls['lastName']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="mobileNo">Mobile Number *</mat-label>
+          <input matInput type="text" name="mobileNo" formControlName="mobileNo" />
+          <mat-error *ngIf="customerForm.controls['mobileNo']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="whatsappNo">Whatsapp Number *</mat-label>
+          <input matInput type="text" name="whatsappNo" formControlName="whatsappNo" />
+          <mat-error *ngIf="customerForm.controls['whatsappNo']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fullWidth" appearance="outline">
+          <mat-label for="address">Address *</mat-label>
+          <input matInput type="text" name="address" formControlName="address" />
+          <mat-error *ngIf="customerForm.controls['address']?.errors?.required">field required</mat-error>
+        </mat-form-field>
+
+    </div>
+  </form>
+</div>
+<div class="mt-5" mat-dialog-actions>
+  <button mat-raised-button color="primary"  (click)="save()" cdkFocusInitial >Save</button>
+
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+</div>
+<!-- [disabled]="customerForm.dirty && customerForm.errors"  -->
+
