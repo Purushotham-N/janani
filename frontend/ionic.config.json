@@ -1,0 +1,7 @@
+{
+  "name": "jdf",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

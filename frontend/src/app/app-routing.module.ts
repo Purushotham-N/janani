@@ -1,3 +1,4 @@
+import { JdfDashboardComponent } from './jdf-dashboard/jdf-dashboard.component';
 import { FodderInventoryComponent } from './fodder-inventory/fodder-inventory.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     path: 'fodder-inventory',
     component: FodderInventoryComponent,
+  },
+  {
+    path: 'dashboard',
+    component: JdfDashboardComponent
   },
   {
     path: '**',

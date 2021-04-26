@@ -1,3 +1,4 @@
+import { ChartsModule } from 'ng2-charts';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -38,6 +39,18 @@ import {  ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.compone
 import { CustomerDialogComponent } from './customers/customer-dialog/customer-dialog.component';
 import { OrderDialogComponent } from './orders/order-dialog/order-dialog.component';
 import { FodderInventoryDialogComponent } from './fodder-inventory/fodder-inventory-dialog/fodder-inventory-dialog.component';
+import { NavComponent } from './nav/nav.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { JdfDashboardComponent } from './jdf-dashboard/jdf-dashboard.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatMenuModule } from '@angular/material/menu';
+import { CardComponent } from './card/card.component';
+import { ProductSalesChartComponent } from './charts/product-sales-chart/product-sales-chart.component';
+import { SalesTrafficChartComponent } from './charts/sales-traffic-chart/sales-traffic-chart.component';
+import { AnnualSalesChartComponent } from './charts/annual-sales-chart/annual-sales-chart.component';
+import { StoreSessionsChartComponent } from './charts/store-sessions-chart/store-sessions-chart.component';
+import { MiniCardComponent } from './mini-card/mini-card.component';
+
 
 
 @NgModule({
@@ -53,7 +66,15 @@ import { FodderInventoryDialogComponent } from './fodder-inventory/fodder-invent
     ConfirmDialogComponent,
     CustomerDialogComponent,
     OrderDialogComponent,
-    FodderInventoryDialogComponent
+    FodderInventoryDialogComponent,
+    NavComponent,
+    JdfDashboardComponent,
+    CardComponent,
+    ProductSalesChartComponent,
+    SalesTrafficChartComponent,
+    AnnualSalesChartComponent,
+    StoreSessionsChartComponent,
+    MiniCardComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +88,11 @@ import { FodderInventoryDialogComponent } from './fodder-inventory/fodder-invent
     MatSidenavModule, MatToolbarModule, MatTableModule, MatPaginatorModule, MatSortModule,
     MatTooltipModule,
     FlexLayoutModule,
-    IonicModule.forRoot()
+    IonicModule.forRoot(),
+    LayoutModule,
+    MatGridListModule,
+    MatMenuModule,
+    ChartsModule
   ],
   entryComponents:[CattleDialogComponent, ConfirmDialogComponent,],
   providers: [CustomersService],
